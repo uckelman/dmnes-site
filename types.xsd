@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- nym_t definition -->
+  <xs:simpleType name="nym_t">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- name_t definition -->
+  <xs:simpleType name="name_t">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- gen_t definition -->
+  <xs:simpleType name="gen_t">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="M"/>
+      <xs:enumeration value="F"/>
+      <xs:enumeration value="U"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- date_t definition -->
+  
+  <!-- lang_t definition -->
+  <xs:simpleType name="lang_t">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- etym_t definition -->
+  <xs:complexType name="etym_t" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- usg_t definition -->
+  <xs:complexType name="usg_t" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- note_t definition -->
+  <xs:complexType name="note_t" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

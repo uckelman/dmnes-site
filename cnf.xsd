@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="types.xsd"/>
+ 
+  <!-- cnf_t definition -->
+  <xs:complexType name="cnf_t">
+    <xs:sequence>
+      <xs:element name="nym" type="nym_t"/>
+      <xs:element name="gen" type="gen_t"/>
+      <xs:element name="etym" type="etym_t"/>
+      <xs:element name="usg" type="usg_t" minOccurs="0"/>
+      <xs:element name="note" type="note_t" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- cnf is the sole permitted top-level element -->
+  <xs:element name="cnf" type="cnf_t" />
+
+</xs:schema>

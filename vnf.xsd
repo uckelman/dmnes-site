@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="schema/types.xsd"/>
+
+  <!-- vnf_t definition -->
+  <xs:complexType name="vnf_t">
+    <xs:element name="nym" type="nym_t"/>
+    <xs:element name="name" type="name_t"/>
+    <xs:element name="gen" type="gen_t"/>
+  </xs:complexType>
+
+  <!-- vnf is the sole permitted top-level element -->
+  <xs:element name="vnf" type="vnf_t" />
+
+</xs:schema>
