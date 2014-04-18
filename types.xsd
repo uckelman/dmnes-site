@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <!-- nym_t definition -->
-  <xs:simpleType name="nym_t">
+  <!-- nonempty_string_t definition -->
+  <xs:simpleType name="nonempty_string_t">
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="collapse"/>
       <xs:minLength value="1"/>
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- anything_t definition -->
+  <xs:complexType name="anything_t" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- nym_t definition -->
+  <xs:simpleType name="nym_t">
+    <xs:restriction base="nonempty_string_t"/>
+  </xs:simpleType>
+
   <!-- name_t definition -->
   <xs:simpleType name="name_t">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:minLength value="1"/>
-    </xs:restriction>
+    <xs:restriction base="nonempty_string_t"/>
   </xs:simpleType>
 
   <!-- gen_t definition -->
@@ -26,35 +35,73 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <!-- date_t definition -->
-  
-  <!-- lang_t definition -->
-  <xs:simpleType name="lang_t">
+  <!-- case_t definition -->
+  <xs:simpleType name="case_t">
     <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-      <xs:minLength value="1"/>
+      <xs:enumeration value="abl"/>
+      <xs:enumeration value="acc"/>
+      <xs:enumeration value="dat"/>
+      <xs:enumeration value="gen"/>
+      <xs:enumeration value="nom"/>
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- date_t definition -->
+  <xs:simpleType name="date_t">
+    <xs:restriction base="nonempty_string_t"/>
+  </xs:simpleType>
+ 
+  <!-- lang_t definition -->
+  <xs:simpleType name="lang_t">
+    <xs:restriction base="nonempty_string_t"/>
+  </xs:simpleType>
+
+  <!-- place_t definition -->
+  <xs:complexType name="place_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- etym_t definition -->
-  <xs:complexType name="etym_t" mixed="true">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:any processContents="lax"/>
-    </xs:sequence>
+  <xs:complexType name="etym_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- usg_t definition -->
-  <xs:complexType name="usg_t" mixed="true">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:any processContents="lax"/>
-    </xs:sequence>
+  <xs:complexType name="usg_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- note_t definition -->
-  <xs:complexType name="note_t" mixed="true">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:any processContents="lax"/>
-    </xs:sequence>
+  <xs:complexType name="note_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- bibl_t definition -->
+  <xs:complexType name="bibl_t">
+    <xs:all>
+      <xs:element name="key" type="key_t"/>
+      <xs:element name="loc" type="loc_t" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <!-- key_t definition -->
+  <xs:simpleType name="key_t">
+    <xs:restriction base="nonempty_string_t"/>
+  </xs:simpleType>
+
+  <!-- loc_t definition -->
+  <xs:complexType name="loc_t">
+    <xs:complexContent>
+      <xs:extension base="anything_t"/>
+    </xs:complexContent>
   </xs:complexType>
 
 </xs:schema>

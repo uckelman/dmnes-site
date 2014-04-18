@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:include schemaLocation="schema/types.xsd"/>
+  <xs:include schemaLocation="types.xsd"/>
 
   <!-- vnf_t definition -->
   <xs:complexType name="vnf_t">
-    <xs:element name="nym" type="nym_t"/>
-    <xs:element name="name" type="name_t"/>
-    <xs:element name="gen" type="gen_t"/>
+    <xs:sequence>
+      <xs:element name="nym" type="nym_t"/>
+      <xs:element name="name" type="name_t"/>
+      <xs:element name="gen" type="gen_t"/>
+      <xs:element name="case" type="case_t"/>
+      <xs:element name="lang" type="lang_t"/>
+      <xs:element name="place" type="place_t"/>
+      <xs:element name="date" type="date_t"/>
+      <xs:element name="bibl" type="bibl_t"/>
+      <xs:element name="note" type="note_t" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- vnf is the sole permitted top-level element -->
