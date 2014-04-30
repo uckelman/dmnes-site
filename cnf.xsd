@@ -9,6 +9,7 @@
       <xs:element name="nym" type="nym_t"/>
       <xs:element name="gen" type="gen_t"/>
       <xs:element name="etym" type="etym_t"/>
+      <xs:element name="def" type="def_t"/>
       <xs:element name="usg" type="usg_t" minOccurs="0"/>
       <xs:element name="note" type="note_t" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
