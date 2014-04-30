@@ -6,8 +6,8 @@
   <!-- vnf_t definition -->
   <xs:complexType name="vnf_t">
     <xs:sequence>
-      <xs:element name="nym" type="nym_t"/>
       <xs:element name="name" type="name_t"/>
+      <xs:element name="nym" type="nym_t"/>
       <xs:element name="gen" type="gen_t"/>
       <xs:element name="case" type="case_t"/>
       <xs:element name="lang" type="lang_t"/>
