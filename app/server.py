@@ -146,7 +146,7 @@ def xmlfrag(key, obj):
   return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
 
 
-def build_cnf(cnf, schema):
+def cnf_build(cnf, schema):
   root = E.cnf(
     E.nym(cnf['nym']),
     E.gen(cnf['gen']),
@@ -160,7 +160,7 @@ def build_cnf(cnf, schema):
   return lxml.etree.ElementTree(root)
 
 
-def build_vnf(vnf, schema):
+def vnf_build(vnf, schema):
   root = E.vnf(
     E.name(vnf['name']),
     E.nym(vnf['nym']),
@@ -215,20 +215,6 @@ def commit_to_git(username, path, tree):
 def push_back_to_git(username):
   upath = os.path.join('users', username)
   git_push(upath, 'origin', username + ':' + username) 
-
-
-def cnf_add(username, cnf):
-  schema = get_cnf_schema()
-  tree = build_cnf(cnf, schema)
-  path = cnf_path(cnf)
-  commit_to_git(username, path, tree)
-
-
-def vnf_add(username, vnf):
-  schema = get_vnf_schema()
-  tree = build_vnf(vnf, schema)
-  path = vnf_path(vnf)
-  commit_to_git(username, path, tree)
 
 
 # TODO: handle exceptions
@@ -289,9 +275,10 @@ def logout():
 
 
 class FormStruct:
-  def __init__(self, path_func, add_func, cn_func, keepers, templ):
+  def __init__(self, path_func, schema, build_func, cn_func, keepers, templ):
     self.path_func = path_func
-    self.add_func = add_func
+    self.schema = schema
+    self.build_func = build_func
     self.cn_func = cn_func
     self.keepers = keepers
     self.templ = templ
@@ -299,7 +286,8 @@ class FormStruct:
 
 CNF = FormStruct(
   cnf_path,
-  cnf_add,
+  load_schema(app.config['CNF_SCHEMA']),
+  cnf_build,
   lambda x: x['nym'],
   (),
   'cnf.html'
@@ -307,7 +295,8 @@ CNF = FormStruct(
 
 VNF = FormStruct(
   vnf_path,
-  vnf_add,
+  load_schema(app.config['VNF_SCHEMA']),
+  vnf_build,
   lambda x: x['name'],
   ('lang', 'place', 'date', 'bib_key'),
   'vnf.html'
@@ -333,7 +322,9 @@ def handle_entry_form(fstruct):
       abort(409)
 
     # write the entry and report that
-    fstruct.add_func(username, request.form)
+    tree = fstruct.build_func(request.form, fstruct.schema)
+    commit_to_git(username, localpath, tree)
+
     flash('Added ' + fstruct.cn_func(request.form))
 
     # retain some input values for next entry 
