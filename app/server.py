@@ -231,14 +231,6 @@ def vnf_add(username, vnf):
   commit_to_git(username, path, tree)
 
 
-def cnf_cn(cnf):
-  return cnf['nym']
-
-
-def vnf_cn(vnf):
-  return vnf['name']
-
-
 # TODO: handle exceptions
 
 #
@@ -308,7 +300,7 @@ class FormStruct:
 CNF = FormStruct(
   cnf_path,
   cnf_add,
-  cnf_cn,
+  lambda x: x['nym'],
   (),
   'cnf.html'
 )
@@ -316,7 +308,7 @@ CNF = FormStruct(
 VNF = FormStruct(
   vnf_path,
   vnf_add,
-  vnf_cn,
+  lambda x: x['name'],
   ('lang', 'place', 'date', 'bib_key'),
   'vnf.html'
 )
