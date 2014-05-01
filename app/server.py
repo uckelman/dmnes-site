@@ -146,7 +146,7 @@ def xmlfrag(key, obj):
   return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
 
 
-def build_cnf(cnf):
+def build_cnf(cnf, schema):
   root = E.cnf(
     E.nym(cnf['nym']),
     E.gen(cnf['gen']),
@@ -156,13 +156,11 @@ def build_cnf(cnf):
     xmlfrag('note', cnf)
   ) 
 
-  schema = get_cnf_schema()
   schema.assertValid(root)
-
   return lxml.etree.ElementTree(root)
 
 
-def build_vnf(vnf):
+def build_vnf(vnf, schema):
   root = E.vnf(
     E.name(vnf['name']),
     E.nym(vnf['nym']),
@@ -178,9 +176,7 @@ def build_vnf(vnf):
     xmlfrag('note', vnf)
   ) 
 
-  schema = get_vnf_schema()
   schema.assertValid(root)
-
   return lxml.etree.ElementTree(root)
 
 
@@ -222,13 +218,15 @@ def push_back_to_git(username):
 
 
 def cnf_add(username, cnf):
-  tree = build_cnf(cnf)
+  schema = get_cnf_schema()
+  tree = build_cnf(cnf, schema)
   path = cnf_path(cnf)
   commit_to_git(username, path, tree)
 
 
 def vnf_add(username, vnf):
-  tree = build_vnf(vnf)
+  schema = get_vnf_schema()
+  tree = build_vnf(vnf, schema)
   path = vnf_path(vnf)
   commit_to_git(username, path, tree)
 
