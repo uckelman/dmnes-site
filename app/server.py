@@ -269,7 +269,6 @@ def logout():
   username = session.pop('username', None)
   if username:
     push_back_to_git(username)
-# FIXME: nothing uses this flash
     flash('Goodbye, ' + username + '.')
   return redirect(url_for('login'))
 
