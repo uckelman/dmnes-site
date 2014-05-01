@@ -41,7 +41,6 @@ class User(object):
     self.realname = realname
     self.email = email
 
-
   def check_password(self, password):
     return werkzeug.security.check_password_hash(self.pwhash, password)
 
@@ -211,7 +210,10 @@ def commit_to_git(username, path, tree):
   upath = os.path.join('users', username)
   write_tree(tree, os.path.join(upath, path))
   git_add_file(upath, path)
-  git_commit_file(upath, accounts[username][1], 'Added ' + path, path)
+  user = accounts[username]
+  author = '{} <{}>'.format(user.realname, user.email)
+  msg = 'Added ' + path
+  git_commit_file(upath, author, msg, path)
 
 
 def push_back_to_git(username):
@@ -219,16 +221,24 @@ def push_back_to_git(username):
   git_push(upath, 'origin', username + ':' + username) 
 
 
-def add_cnf(username, cnf):
+def cnf_add(username, cnf):
   tree = build_cnf(cnf)
   path = cnf_path(cnf)
   commit_to_git(username, path, tree)
 
 
-def add_vnf(username, vnf):
+def vnf_add(username, vnf):
   tree = build_vnf(vnf)
   path = vnf_path(vnf)
   commit_to_git(username, path, tree)
+
+
+def cnf_cn(cnf):
+  return cnf['nym']
+
+
+def vnf_cn(vnf):
+  return vnf['name']
 
 
 # TODO: handle exceptions
@@ -288,48 +298,68 @@ def logout():
   return redirect(url_for('login'))
 
 
-@app.route('/cnf', methods=['GET', 'POST'])
-def cnf():
+class FormStruct:
+  def __init__(self, path_func, add_func, cn_func, keepers, templ):
+    self.path_func = path_func
+    self.add_func = add_func
+    self.cn_func = cn_func
+    self.keepers = keepers
+    self.templ = templ
+
+
+CNF = FormStruct(
+  cnf_path,
+  cnf_add,
+  cnf_cn,
+  (),
+  'cnf.html'
+)
+
+VNF = FormStruct(
+  vnf_path,
+  vnf_add,
+  vnf_cn,
+  ('lang', 'place', 'date', 'bib_key'),
+  'vnf.html'
+)
+
+
+def handle_entry_form(fstruct):
   if 'username' not in session:
     abort(401)
+
+  vals = {}
 
   if request.method == 'POST':
     if request_size(request.form) > 2048:
       abort(413)
 
     username = session['username']
-    if os.path.exists(os.path.join('users', username, cnf_path(request.form))):
+    localpath = fstruct.path_func(request.form)
+    fullpath = os.path.join('users', username, localpath)
+
+    # don't clobber existing entries
+    if os.path.exists(fullpath):
       abort(409)
 
-    add_cnf(session['username'], request.form)
-    flash('Added ' + request.form['nym'])
+    # write the entry and report that
+    fstruct.add_func(username, request.form)
+    flash('Added ' + fstruct.cn_func(request.form))
 
-  return render_template('cnf.html')
+    # retain some input values for next entry 
+    vals = {k: request.form[k] for k in fstruct.keepers}
+
+  return render_template(fstruct.templ, vals=vals)
+
+
+@app.route('/cnf', methods=['GET', 'POST'])
+def cnf():
+  return handle_entry_form(CNF)
 
 
 @app.route('/vnf', methods=['GET', 'POST'])
 def vnf():
-  if 'username' not in session:
-    abort(401)
-
-  if request.method == 'POST':
-    if request_size(request.form) > 2048:
-      abort(413)
-
-    username = session['username']
-    if os.path.exists(os.path.join('users', username, vnf_path(request.form))):
-      abort(409)
-
-    add_vnf(username, request.form)
-    flash('Added ' + request.form['name'])
-
-    # retain some input values for next entry 
-    keep = ('lang', 'place', 'date', 'bib_key')
-    vals = {k: request.form[k] for k in keep}
-  else:
-    vals = {}
-
-  return render_template('vnf.html', vals=vals)
+  return handle_entry_form(VNF)
 
 
 if __name__ == '__main__':
