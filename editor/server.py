@@ -187,7 +187,10 @@ def vnf_path(vnf):
 
 
 def xmlfrag(key, obj):
-  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
+  if obj[key]:
+    return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
+  else:
+    return ""
 
 
 def cnf_build(cnf, schema):
