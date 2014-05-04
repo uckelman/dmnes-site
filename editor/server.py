@@ -362,6 +362,12 @@ VNF = FormStruct(
 )
 
 
+class FormError(Exception):
+  def __init__(self, message):
+    super(FormError, self).__init__()
+    self.message = message
+
+
 def handle_entry_form(fstruct):
   if 'username' not in session:
     abort(401)
@@ -369,25 +375,35 @@ def handle_entry_form(fstruct):
   vals = {}
 
   if request.method == 'POST':
-    if request_size(request.form) > 2048:
-      abort(413)
+    try:
+      if request_size(request.form) > 2048:
+        abort(413)
 
-    username = session['username']
-    localpath = fstruct.path_func(request.form)
-    fullpath = os.path.join('users', username, localpath)
+      username = session['username']
+      localpath = fstruct.path_func(request.form)
+      fullpath = os.path.join('users', username, localpath)
 
-    # don't clobber existing entries
-    if os.path.exists(fullpath):
-      abort(409)
+      # don't clobber existing entries
+      if os.path.exists(fullpath):
+        raise FormError(fullpath + ' already exists')
 
-    # write the entry and report that
-    tree = fstruct.build_func(request.form, fstruct.schema)
-    commit_to_git(username, localpath, tree)
+      # validate the entry
+      try:
+        tree = fstruct.build_func(request.form, fstruct.schema)
+      except lxml.etree.DocumentInvalid as e:
+        raise FormError(unicode(e))
 
-    flash('Added ' + fstruct.cn_func(request.form))
+      # write the entry and report that
+      commit_to_git(username, localpath, tree)
+      flash('Added ' + fstruct.cn_func(request.form))
 
-    # retain some input values for next entry 
-    vals = {k: request.form[k] for k in fstruct.keepers}
+      # retain some input values for next entry
+      vals = {k: request.form[k] for k in fstruct.keepers}
+
+    except FormError as e:
+      flash(e.message, 'error')
+      # retain all input values on error
+      vals = request.form
 
   return render_template(fstruct.templ, vals=vals)
 
