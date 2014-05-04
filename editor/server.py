@@ -318,7 +318,7 @@ def login():
     if error == None:
       session['username'] = username
       prepare_git(username)
-      flash('Welcome, ' + username + '.')
+      flash('Welcome, ' + username + '.', 'notice')
       return redirect(url_for('cnf'))
 
   return render_template('login.html', error=error)
@@ -329,7 +329,7 @@ def logout():
   username = session.pop('username', None)
   if username:
     push_back_to_git(username)
-    flash('Goodbye, ' + username + '.')
+    flash('Goodbye, ' + username + '.', 'notice')
   return redirect(url_for('login'))
 
 
@@ -395,7 +395,7 @@ def handle_entry_form(fstruct):
 
       # write the entry and report that
       commit_to_git(username, localpath, tree)
-      flash('Added ' + fstruct.cn_func(request.form))
+      flash('Added ' + fstruct.cn_func(request.form), 'notice')
 
       # retain some input values for next entry
       vals = {k: request.form[k] for k in fstruct.keepers}
