@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}CNF input{% endblock %}
+{% block content %}
+  <div class="logout"><a href="logout">Logout</a></div>
+  <form action="" method="post">
+    <table>
+      <tr>
+        <th>
+          <label for="nym">Nym</label>
+        </th>
+        <td>
+          <input id="nym" name="nym" type="text" size=""/>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="gen">Gender</label>
+        </th>
+        <td>
+          <select id="gen" name="gen">
+            <option value="M">Masculine</option>
+            <option value="F">Feminine</option>
+            <option value="U">Unknown</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="etym">Etymology</label>
+        </th>
+        <td>
+          <textarea id="etym" name="etym" cols="80" rows="5"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="def">Definition</label>
+        </th>
+        <td>
+          <textarea id="def" name="def" cols="80" rows="5"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="usg">Usage</label>
+        </th>
+        <td>
+          <textarea id="usg" name="usg" cols="80" rows="5"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          <label for="note">Note</label>
+        </th>
+        <td>
+          <textarea id="note" name="note" cols="80" rows="5"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td/>
+        <td>
+          <button type="submit" value="Submit">Submit</button>
+          <button type="reset" value="Clear">Clear</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+{% endblock %}

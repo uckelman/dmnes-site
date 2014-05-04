@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes">
+      {% for category, message in messages %}
+        {% if category == 'git' %}
+          {% set tag = 'pre' %}
+        {% else %}
+          {% set tag = 'div' %}
+        {% endif %}
+        <{{ tag }} class="{{ category }}">{{ message }}</{{ tag }}>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</body>
+</html>
