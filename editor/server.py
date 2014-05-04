@@ -9,7 +9,7 @@ import unicodedata
 import werkzeug.security
 
 import flask
-from flask import abort, flash, g, redirect, render_template, request, session, url_for
+from flask import abort, flash, redirect, render_template, request, session, url_for
 
 import lxml
 from lxml.builder import E
@@ -70,20 +70,7 @@ accounts = {
 def load_schema(filename):
   with open(filename) as f:
     doc = lxml.etree.parse(f)
-
   return lxml.etree.XMLSchema(doc)
-
-
-def get_cnf_schema():
-  if not hasattr(g, 'cnf_schema'):
-    g.cnf_schema = load_schema(app.config['CNF_SCHEMA'])
-  return g.cnf_schema
-
-
-def get_vnf_schema():
-  if not hasattr(g, 'vnf_schema'):
-    g.vnf_schema = load_schema(app.config['VNF_SCHEMA'])
-  return g.vnf_schema
 
 
 #
