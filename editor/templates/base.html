@@ -4,14 +4,16 @@
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %}</title>
 
-  <script language="javascript">
-    // fill in the form as directed, but keep it clearable
-    window.onload = function() {
-      {% for k, v in vals.items() %}
-      document.getElementById("{{ k }}").value = "{{ v }}";
-      {% endfor %}
-    };
-  </script>
+  {% if vals %}
+    <script language="javascript">
+      // fill in the form as directed, but keep it clearable
+      window.onload = function() {
+        {% for k, v in vals.items() %}
+        document.getElementById("{{ k }}").value = "{{ v }}";
+        {% endfor %}
+      };
+    </script>
+  {% endif %}
 </head>
 <body>
   {% with messages = get_flashed_messages(with_categories=true) %}
