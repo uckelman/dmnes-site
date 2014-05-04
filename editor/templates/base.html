@@ -19,11 +19,12 @@
       <div class="flashes">
       {% for category, message in messages %}
         {% if category == 'git' %}
-          {% set tag = 'pre' %}
+          <pre class="git">{{ message }}</pre>
+        {% elif category == 'error' %}
+          <div class="error"><strong>Error:</strong> {{ message }}</div>
         {% else %}
-          {% set tag = 'div' %}
+          <div class="{{ category }}">{{ message }}</div>
         {% endif %}
-        <{{ tag }} class="{{ category }}">{{ message }}</{{ tag }}>
       {% endfor %}
       </div>
     {% endif %}
