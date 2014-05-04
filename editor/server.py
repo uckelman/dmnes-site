@@ -47,6 +47,7 @@ class User(object):
     return werkzeug.security.check_password_hash(self.pwhash, password)
 
 
+# TODO: move accounts out of the source
 accounts = {
   'liana': User(
     'liana',  # yoIN3i)2k
@@ -156,6 +157,8 @@ def prefix_branch(s, maxlen=3):
 
 def build_path(basedir, base):
   base = unicodedata.normalize('NFKC', unicode(base).lower())
+  if len(base) > 255:
+    raise RuntimeError('Evil path: ' + base)
   for evil in os.pardir, os.sep, os.altsep:
     if evil and evil in base:
       raise RuntimeError('Evil path: ' + base)
