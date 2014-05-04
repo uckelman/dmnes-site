@@ -285,10 +285,7 @@ def push_back_to_git(username):
 
 def auth_user(username, password):
   user = accounts.get(username, None)
-  if user:
-    if user.check_password(password):
-      return None
-  return 'Invalid username or password!'
+  return user and user.check_password(password)
 
 
 #
@@ -314,14 +311,16 @@ def login():
   if request.method == 'POST':
     username = request.form['username']
     password = request.form['password']
-    error = auth_user(username, password)
-    if error == None:
+
+    if auth_user(username, password):
       session['username'] = username
       prepare_git(username)
       flash('Welcome, ' + username + '.', 'notice')
       return redirect(url_for('cnf'))
+    else:
+      flash('Invalid username or password!', 'error')
 
-  return render_template('login.html', error=error)
+  return render_template('login.html', vals={})
 
 
 @app.route('/logout')
