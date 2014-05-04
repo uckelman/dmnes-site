@@ -198,8 +198,8 @@ def cnf_build(cnf, schema):
     E.nym(cnf['nym']),
     E.gen(cnf['gen']),
     xmlfrag('etym', cnf),
-    xmlfrag('def', cnf),
     xmlfrag('usg', cnf),
+    xmlfrag('def', cnf),
     xmlfrag('note', cnf)
   ) 
 
