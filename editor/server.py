@@ -177,9 +177,9 @@ def vnf_path(vnf):
 
 
 def xmlfrag(key, obj):
-  if obj[key]:
+  try:
     return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
-  else:
+  except KeyError:
     return ''
 
 
