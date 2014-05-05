@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block title %}VNF input{% endblock %}
 {% block content %}
-  <div class="nav">
+  <nav>
     <span><a href="logout">Logout</a></span> 
     <span><a href="cnf">CNF</a></span>
     <span>VNF</span>
-  </div>
+  </nav>
   <form action="" method="post">
     <table>
       <tr>
@@ -92,7 +92,7 @@
           <label for="note">Note</label>
         </th>
         <td>
-          <textarea id="note" name="note" cols="80" rows="5"></textarea>
+          <textarea id="note" name="note" cols="60" rows="5"></textarea>
         </td>
       </tr>
       <tr>
