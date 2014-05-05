@@ -9,7 +9,9 @@
       // fill in the form as directed, but keep it clearable
       window.onload = function() {
         {% for k, v in vals.items() %}
-        document.getElementById("{{ k }}").value = "{{ v }}";
+          {% if v %}
+            document.getElementById("{{ k }}").value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
+          {% endif %}
         {% endfor %}
       };
     </script>
