@@ -380,8 +380,11 @@ def handle_entry_form(fstruct):
       if request_size(request.form) > 2048:
         abort(413)
 
+      # strip leading and trailing whitespace from form input
+      form = {k: v.strip() for k, v in request.form.iteritems()}
+
       username = session['username']
-      localpath = fstruct.path_func(request.form)
+      localpath = fstruct.path_func(form)
       fullpath = os.path.join('users', username, localpath)
 
       # don't clobber existing entries
@@ -390,13 +393,13 @@ def handle_entry_form(fstruct):
 
       # validate the entry
       try:
-        tree = fstruct.build_func(request.form, fstruct.schema)
+        tree = fstruct.build_func(form, fstruct.schema)
       except lxml.etree.DocumentInvalid as e:
         raise FormError(unicode(e))
 
       # write the entry and report that
       commit_to_git(username, localpath, tree)
-      flash('Added ' + fstruct.cn_func(request.form), 'notice')
+      flash('Added ' + fstruct.cn_func(form), 'notice')
 
       # retain some input values for next entry
       vals = {k: request.form[k] for k in fstruct.keepers}
