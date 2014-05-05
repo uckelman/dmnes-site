@@ -198,7 +198,7 @@ def cnf_build(cnf, schema):
     xmlfrag('usg', cnf),
     xmlfrag('def', cnf),
     xmlfrag('note', cnf)
-  ) 
+  )
 
   indent(root, 0)
 
