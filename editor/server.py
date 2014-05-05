@@ -180,7 +180,14 @@ def xmlfrag(key, obj):
   if obj[key]:
     return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
   else:
-    return ""
+    return ''
+
+
+def indent(node, depth):
+  node.text = '\n' + '  '*(depth+1)
+  for e in node[:-1]:
+    e.tail = '\n' + '  '*(depth+1)
+  node[-1].tail = '\n' + '  '*depth
 
 
 def cnf_build(cnf, schema):
@@ -192,6 +199,8 @@ def cnf_build(cnf, schema):
     xmlfrag('def', cnf),
     xmlfrag('note', cnf)
   ) 
+
+  indent(root, 0)
 
   schema.assertValid(root)
   return lxml.etree.ElementTree(root)
@@ -213,6 +222,9 @@ def vnf_build(vnf, schema):
     xmlfrag('note', vnf)
   ) 
 
+  indent(root, 0)
+  indent(root.find('bibl'), 1)
+
   schema.assertValid(root)
   return lxml.etree.ElementTree(root)
 
@@ -229,7 +241,7 @@ def write_tree(tree, path):
       f,
       xml_declaration='<?xml version="1.0" encoding="UTF-8"?>',
       encoding='UTF-8',
-      pretty_print=True
+      pretty_print=False
     )
 
 
