@@ -75,9 +75,8 @@ def load_schema(filename):
     doc = lxml.etree.parse(f)
   return lxml.etree.XMLSchema(doc)
 
-
 #
-# Git functions
+# shell out
 #
 
 class SubprocessError(subprocess32.CalledProcessError):
@@ -94,10 +93,10 @@ class SubprocessError(subprocess32.CalledProcessError):
     )
 
 
-def do_git(repo_dir, cmd, *args):
-  cmdline = ['git', cmd] + list(args)
+def do_cmd(cwd, *args):
   with subprocess32.Popen(
-    cmdline, cwd=repo_dir,
+    args,
+    cwd=cwd,
     stdout=subprocess32.PIPE,
     stderr=subprocess32.STDOUT
   ) as proc:
@@ -105,11 +104,20 @@ def do_git(repo_dir, cmd, *args):
     if proc.returncode:
       raise SubprocessError(
         returncode=proc.returncode,
-        cmd=cmdline,
+        cmd=args,
         output=out
       )
 
-  flash('% {}\n{}'.format(' '.join(cmdline), out), 'git')
+  return '% {}\n{}'.format(' '.join(args), out)
+
+
+#
+# Git functions
+#
+
+def do_git(repo_dir, cmd, *args):
+  out = do_cmd(repo_dir, 'git', cmd, *args)
+  flash(out, 'git')
 
 
 def git_clone(base_dir, repo_url, repo_dir):
