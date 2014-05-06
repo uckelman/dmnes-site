@@ -22,6 +22,7 @@ app.config.update(dict(
   USERS_DIR='users',
   CNF_DIR='CNFs',
   VNF_DIR='VNFs',
+  BIB_DIR='bib',
   CNF_SCHEMA='schemata/cnf.xsd',
   VNF_SCHEMA='schemata/vnf.xsd',
   SECRET_KEY=os.urandom(128),
@@ -156,26 +157,40 @@ def prefix_branch(s, maxlen=3):
   return [s[n-1:n] for n in range(1,maxlen+1)] + [s]
 
 
-def build_path(basedir, base):
-  base = unicodedata.normalize('NFKC', unicode(base).lower())
-  if len(base) > 255:
-    raise RuntimeError('Evil path: ' + base)
+def sanitize_filename(filename):
+  filename = unicodedata.normalize('NFKC', unicode(filename).lower())
+  if len(filename) > 255:
+    raise RuntimeError('Evil path: ' + filename)
   for evil in os.pardir, os.sep, os.altsep:
-    if evil and evil in base:
-      raise RuntimeError('Evil path: ' + base)
-  return os.path.join(basedir, *prefix_branch(base)) + '.xml'
+    if evil and evil in filename:
+      raise RuntimeError('Evil path: ' + filename)
+  return filename
+
+
+def build_prefix_path(basedir, basename):
+  basename = sanitize_filename(basename)
+  return os.path.join(basedir, *prefix_branch(basename)) + '.xml'
 
 
 def cnf_path(cnf):
-  return build_path(app.config['CNF_DIR'], cnf['nym'])
+  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'])
 
 
 def vnf_path(vnf):
-  return build_path(
+  return build_prefix_path(
     app.config['VNF_DIR'],
     '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['bib_key'])
   )
 
+
+def bib_path(bib):
+  return os.path.join(
+    app.config['BIB_DIR'],
+    sanitize_filename(bib['key'])
+  )
+
+
+# FIXME: remove empty optional parts (def, note)
 
 def xmlfrag(key, obj):
   try:
@@ -227,6 +242,18 @@ def vnf_build(vnf, schema):
   indent(root.find('bibl'), 1)
 
   schema.assertValid(root)
+  return lxml.etree.ElementTree(root)
+
+
+def bib_build(bib, schema):
+  root = E.bibl(
+    E.key(bib['key']),
+    lxml.etree.fromstring(bib['entry'])
+  )
+
+  indent(root, 0)
+  indent(root[1], 1)
+
   return lxml.etree.ElementTree(root)
 
 
@@ -364,6 +391,16 @@ VNF = FormStruct(
   'vnf.html'
 )
 
+BIB = FormStruct(
+  bib_path,
+#  load_schema(app.config['BIB_SCHEMA']),
+  None,
+  bib_build,
+  lambda x: x['key'],
+  (),
+  'bib.html'
+)
+
 
 class FormError(Exception):
   def __init__(self, message):
@@ -422,6 +459,11 @@ def cnf():
 @app.route('/vnf', methods=['GET', 'POST'])
 def vnf():
   return handle_entry_form(VNF)
+
+
+@app.route('/bib', methods=['GET', 'POST'])
+def bib():
+  return handle_entry_form(BIB)
 
 
 @app.errorhandler(Exception)

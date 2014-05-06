@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}CNF input{% endblock %}
+{% block content %}
+  <!-- TODO: move nav to base template -->
+  <nav>
+    <span><a href="logout">Logout</a></span>
+    <span><a href="cnf">CNF</a></span>
+    <span><a href="vnf">VNF</a></span>
+    <span>Bib</span>
+  </nav>
+  <form action="" method="post">
+    <table>
+      <tr>
+        <th>
+          <label for="key">Key</label>
+        </th>
+        <td>
+          <input id="key" name="key" type="text" size=""/>
+        </td>
+      </tr>
+      <tr>
+      <tr>
+        <th>
+          <label for="entry">Entry</label>
+        </th>
+        <td>
+          <textarea id="entry" name="entry" cols="60" rows="5"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td/>
+        <td>
+          <button type="submit" value="Submit">Submit</button>
+          <button type="reset" value="Clear">Clear</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+{% endblock %}
