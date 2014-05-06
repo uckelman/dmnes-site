@@ -281,14 +281,17 @@ def write_tree(tree, path):
     )
 
 
+def repo_for(username):
+  return os.path.join(app.config['USERS_DIR'], username)
+
+
 def prepare_git(username):
-  uroot = app.config['USERS_DIR']
-  upath = os.path.join(uroot, username)
+  upath = repo_for(username)
   repo_exists = os.path.isdir(upath)
 
   if not repo_exists:
     # set up local repo
-    git_clone(uroot, app.config['REPO_URL'], username)
+    git_clone(app.config['USERS_DIR'], app.config['REPO_URL'], username)
     user = accounts[username]
     git_config_user(upath, user.realname, user.email)
     git_config(upath, 'push.default', 'simple')
@@ -302,7 +305,7 @@ def prepare_git(username):
  
 
 def commit_to_git(username, path, tree):
-  upath = os.path.join(app.config['USERS_DIR'], username)
+  upath = repo_for(username)
   write_tree(tree, os.path.join(upath, path))
   git_add_file(upath, path)
   user = accounts[username]
@@ -312,7 +315,7 @@ def commit_to_git(username, path, tree):
 
 
 def push_back_to_git(username):
-  upath = os.path.join(app.config['USERS_DIR'], username)
+  upath = repo_for(username)
   git_push(upath, 'origin', username + ':' + username) 
 
 
@@ -432,7 +435,7 @@ def handle_entry_form(fstruct):
 
       username = session['username']
       localpath = fstruct.path_func(form)
-      fullpath = os.path.join(app.config['USERS_DIR'], username, localpath)
+      fullpath = os.path.join(repo_for(username), localpath)
 
       # don't clobber existing entries
       if os.path.exists(fullpath):
