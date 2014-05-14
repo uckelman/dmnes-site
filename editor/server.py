@@ -1,4 +1,6 @@
-#!/usr/bin/python3 -b
+#!/usr/bin/python -3
+
+##!/usr/bin/python3 -b
 
 import os
 #import subprocess
