@@ -198,12 +198,15 @@ def bib_path(bib):
   )
 
 
-# FIXME: remove empty optional parts (def, note)
-
 def xmlfrag(key, obj):
   try:
-    return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, obj[key]))
+    val = obj[key]
   except KeyError:
+    return ''
+
+  if val:
+    return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
+  else:
     return ''
 
 
