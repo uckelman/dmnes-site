@@ -10,13 +10,12 @@ import unicodedata
 
 import werkzeug.security
 
-import flask
-from flask import abort, flash, redirect, render_template, request, session, url_for
+from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
 
 import lxml
 from lxml.builder import E
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
