@@ -113,6 +113,19 @@ def do_cmd(cwd, *args):
 
 
 #
+# bib lookup
+#
+
+def get_bibkeys(repo_dir):
+  bib_dir = app.config['BIB_DIR']
+  res = do_cmd(repo_dir, 'grep', '-hoPr', '<key>\\K[^<]+', bib_dir)
+# FIXME: adjust do_cmd to make it possible to get output only
+  keys = res.splitlines()[1:]
+  keys.sort()
+  return keys
+
+
+#
 # Git functions
 #
 
@@ -376,6 +389,16 @@ def logout():
     push_back_to_git(username)
     flash('Goodbye, ' + username + '.', 'notice')
   return redirect(url_for('login'))
+
+
+@app.route('/bibkeys', methods=['GET'])
+def handle_bibkeys_request():
+  if 'username' not in session:
+    abort(401)
+
+  username = session['username']
+  keys = '\n'.join(get_bibkeys(repo_for(username)))
+  return Response(keys, mimetype='text/plain')
 
 
 class FormStruct:
