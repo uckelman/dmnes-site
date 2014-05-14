@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% block title %}VNF input{% endblock %}
+{% block head %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='funcs.js') }}" type="text/javascript"></script>
+  <script language="javascript">
+    var prev_onload = window.onload ? window.onload : function() {};
+    window.onload = function() {
+      prev_onload();
+      setBibKeys();
+    };
+  </script>
+{% endblock %}
 {% block content %}
   <nav>
     <span><a href="logout">Logout</a></span> 
@@ -7,7 +18,7 @@
     <span>VNF</span>
     <span><a href="bib">Bib</a></span>
   </nav>
-  <form action="" method="post">
+  <form action="" method="post" onsubmit="return validateBibKey();">
     <table>
       <tr>
         <th>
@@ -83,10 +94,11 @@
           <label for="bib_key">Source</label>
         </th>
         <td>
-<!-- TODO: dropdown? autocomplete? for bib keys -->
-          <input id="bib_key" name="bib_key" type="text" size=""/>
+          <input id="bib_key" name="bib_key" type="text" list="bib_key_list" required onblur="validateBibKey();"/>
+          <datalist id="bib_key_list">
+          </datalist>
           <label for="bib_loc">@</label> 
-          <input id="bib_loc" name="bib_loc" type="text" size=""/>
+          <input id="bib_loc" name="bib_loc" type="text"/>
         </td>
       </tr>
       <tr>

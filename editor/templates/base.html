@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en-US">
 <head>
+{% block head %}
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %}</title>
 
@@ -16,6 +17,7 @@
       };
     </script>
   {% endif %}
+{% endblock %}
 </head>
 <body>
   {% with messages = get_flashed_messages(with_categories=true) %}
