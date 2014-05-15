@@ -94,7 +94,7 @@
           <label for="bib_key">Source</label>
         </th>
         <td>
-          <input id="bib_key" name="bib_key" type="text" list="bib_key_list" required/>
+          <input id="bib_key" name="bib_key" type="text" list="bib_key_list" required onblur="if (this.value) validateBibKey();"/>
           <datalist id="bib_key_list">
           </datalist>
           <label for="bib_loc">@</label> 
