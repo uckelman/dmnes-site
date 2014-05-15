@@ -342,8 +342,6 @@ def push_back_to_git(username):
   git_push(upath, 'origin', username + ':' + username) 
 
 
-# TODO: handle exceptions
-
 #
 # User authentication
 #
@@ -477,7 +475,9 @@ def handle_entry_form(fstruct):
       # validate the entry
       try:
         tree = fstruct.build_func(form, fstruct.schema)
-      except lxml.etree.DocumentInvalid as e:
+# FIXME: these are not particularly helpful error messages
+# It would be better to highlight the offending field
+      except (lxml.etree.DocumentInvalid, lxml.etree.XMLSyntaxError) as e:
         raise FormError(unicode(e))
 
       # write the entry and report that
