@@ -2,6 +2,7 @@
 
 ##!/usr/bin/python3 -b
 
+import itertools
 import os
 #import subprocess
 import subprocess32 # use until we move to Python 3
@@ -195,33 +196,38 @@ def build_prefix_path(basedir, basename):
 
 
 def cnf_path(cnf):
-  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'])
+  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0])
 
 
 def vnf_path(vnf):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['bib_key'])
+    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['bib_key'][0])
   )
 
 
 def bib_path(bib):
   return os.path.join(
     app.config['BIB_DIR'],
-    sanitize_filename(bib['key'])
+    sanitize_filename(bib['key'][0])
   )
 
 
-def xmlfrag(key, obj):
+def elements(key, obj):
   try:
-    val = obj[key]
+    return (E(key, val) for val in obj[key] if val)
   except KeyError:
-    return ''
+    return ()
 
-  if val:
-    return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
-  else:
-    return ''
+
+def elements_raw_inner(key, obj):
+  try:
+    return (
+      lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
+      for val in obj[key] if val
+    )
+  except KeyError:
+    return ()
 
 
 def indent(node, depth):
@@ -232,14 +238,14 @@ def indent(node, depth):
 
 
 def cnf_build(cnf, schema):
-  root = E.cnf(
-    E.nym(cnf['nym']),
-    E.gen(cnf['gen']),
-    xmlfrag('etym', cnf),
-    xmlfrag('usg', cnf),
-    xmlfrag('def', cnf),
-    xmlfrag('note', cnf)
-  )
+  root = E.cnf(*tuple(itertools.chain(
+    elements('nym', cnf),
+    elements('gen', cnf),
+    elements_raw_inner('etym', cnf),
+    elements_raw_inner('usg', cnf),
+    elements_raw_inner('def', cnf),
+    elements_raw_inner('note', cnf)
+  )))
 
   indent(root, 0)
 
@@ -248,20 +254,20 @@ def cnf_build(cnf, schema):
 
 
 def vnf_build(vnf, schema):
-  root = E.vnf(
-    E.name(vnf['name']),
-    E.nym(vnf['nym']),
-    E.gen(vnf['gen']),
-    E.case(vnf['case']),
-    E.lang(vnf['lang']),
-    xmlfrag('place', vnf),
-    E.date(vnf['date']),
-    E.bibl(
-      E.key(vnf['bib_key']),
-      E.loc(vnf['bib_loc'])
-    ),
-    xmlfrag('note', vnf)
-  ) 
+  root = E.vnf(*tuple(itertools.chain(
+    elements('name', vnf),
+    elements('nym', vnf),
+    elements('gen', vnf),
+    elements('case', vnf),
+    elements('lang', vnf),
+    elements_raw_inner('place', vnf),
+    elements('date', vnf),
+    (E.bibl(
+      E.key(k),
+      E.loc(l)
+    ) for k, l in zip(vnf['bib_key'], vnf['bib_loc'])),
+    elements_raw_inner('note', vnf)
+  )))
 
   indent(root, 0)
   indent(root.find('bibl'), 1)
@@ -271,10 +277,10 @@ def vnf_build(vnf, schema):
 
 
 def bib_build(bib, schema):
-  root = E.bibl(
-    E.key(bib['key']),
-    lxml.etree.fromstring(bib['entry'])
-  )
+  root = E.bibl(*tuple(itertools.chain(
+    elements('key', bib),
+    (lxml.etree.fromstring(val) for val in bib['entry'] if val)
+  )))
 
   indent(root, 0)
   indent(root[1], 1)
@@ -415,7 +421,7 @@ CNF = FormStruct(
   cnf_path,
   load_schema(app.config['CNF_SCHEMA']),
   cnf_build,
-  lambda x: x['nym'],
+  lambda x: x['nym'][0],
   (),
   'cnf.html'
 )
@@ -424,7 +430,7 @@ VNF = FormStruct(
   vnf_path,
   load_schema(app.config['VNF_SCHEMA']),
   vnf_build,
-  lambda x: x['name'],
+  lambda x: x['name'][0],
   ('lang', 'place', 'date', 'bib_key'),
   'vnf.html'
 )
@@ -434,7 +440,7 @@ BIB = FormStruct(
 #  load_schema(app.config['BIB_SCHEMA']),
   None,
   bib_build,
-  lambda x: x['key'],
+  lambda x: x['key'][0],
   (),
   'bib.html'
 )
@@ -458,7 +464,7 @@ def handle_entry_form(fstruct):
         abort(413)
 
       # strip leading and trailing whitespace from form input
-      form = {k: v.strip() for k, v in request.form.iteritems()}
+      form = {k: [v.strip() for v in l] for k, l in request.form.iterlists()}
 
       username = session['username']
       localpath = fstruct.path_func(form)

@@ -1,4 +1,3 @@
-
 function setBibKeys() {
   var klist = document.getElementById('bib_key_list');
 
@@ -34,4 +33,25 @@ function validateBibKey() {
 
   input.setCustomValidity('Unknown bib key.');
   return false;
+}
+
+function addNymInput(button_input) {
+  // make new nym input
+  var input = document.createElement('input');
+  input.setAttribute('name', 'nym');
+  input.setAttribute('type', 'text');
+
+  var td = document.createElement('td');
+  td.appendChild(input);
+
+  // move the button down a row
+  var bi_row = button_input.parentNode.parentNode;
+  button_input.parentNode.removeChild(button_input);
+  td.appendChild(button_input);
+
+  var tr = document.createElement('tr');
+  tr.appendChild(document.createElement('td'));
+  tr.appendChild(td);
+
+  bi_row.parentNode.insertBefore(tr, bi_row.nextElementSibling);
 }
