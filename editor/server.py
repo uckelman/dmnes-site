@@ -398,6 +398,7 @@ def logout():
   return redirect(url_for('login'))
 
 
+# FIXME: Do something to indicate date of modification to prevent staleness
 @app.route('/bibkeys', methods=['GET'])
 def handle_bibkeys_request():
   if 'username' not in session:

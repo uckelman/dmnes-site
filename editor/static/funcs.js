@@ -1,4 +1,4 @@
-function setBibKeys() {
+function setBibKeys(url) {
   var klist = document.getElementById('key_list');
 
   // clear key list
@@ -9,14 +9,16 @@ function setBibKeys() {
  
   // get new list of keys from cur
   var http = new XMLHttpRequest;
-  http.open('GET', '/bibkeys', false);
-  http.send(null);
+  http.open('GET', url, false);
+  http.send();
   
-  // insert new children into klist 
-  for (line of http.responseText.split('\n')) {
-    var opt = document.createElement('option');
-    opt.setAttribute('value', line);
-    klist.appendChild(opt);
+  // insert new children into klist
+  if (http.status == 200) {
+    for (line of http.responseText.split('\n')) {
+      var opt = document.createElement('option');
+      opt.setAttribute('value', line);
+      klist.appendChild(opt);
+    }
   }
 }
 
