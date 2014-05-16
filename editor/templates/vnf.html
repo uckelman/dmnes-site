@@ -7,7 +7,7 @@
     var prev_onload = window.onload ? window.onload : function() {};
     window.onload = function() {
       prev_onload();
-      setBibKeys("{{ url_for('handle_bibkeys_request') }}");
+      setBibKeys("{{ url_for('bibkeys') }}");
     };
   </script>
 {% endblock %}
