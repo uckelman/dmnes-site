@@ -2,7 +2,7 @@
 {% block title %}VNF input{% endblock %}
 {% block head %}
   {{ super() }}
-  <script src="{{ url_for('static', filename='funcs.js') }}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='funcs.js') }}" type="application/javascript"></script>
   <script language="javascript">
     var prev_onload = window.onload ? window.onload : function() {};
     window.onload = function() {
