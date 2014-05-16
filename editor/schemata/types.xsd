@@ -47,6 +47,11 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- dim_t definition -->
+  <xs:simpleType name="dim_t">
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+
   <!-- date_t definition -->
   <xs:simpleType name="date_t">
     <xs:restriction base="nonempty_string_t"/>

@@ -202,7 +202,7 @@ def cnf_path(cnf):
 def vnf_path(vnf):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['bib_key'][0])
+    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['key'][0])
   )
 
 
@@ -213,21 +213,20 @@ def bib_path(bib):
   )
 
 
-def elements(key, obj):
+def element(key, obj):
   try:
-    return (E(key, val) for val in obj[key] if val)
+    return E(key, obj[key][0])
   except KeyError:
-    return ()
+    return ''
 
 
-def elements_raw_inner(key, obj):
+def element_raw_inner(key, obj):
   try:
-    return (
-      lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
-      for val in obj[key] if val
-    )
+    val = obj[key][0]
   except KeyError:
-    return ()
+    return ''
+
+  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val)) if val else ''
 
 
 def indent(node, depth):
@@ -238,14 +237,14 @@ def indent(node, depth):
 
 
 def cnf_build(cnf, schema):
-  root = E.cnf(*tuple(itertools.chain(
-    elements('nym', cnf),
-    elements('gen', cnf),
-    elements_raw_inner('etym', cnf),
-    elements_raw_inner('usg', cnf),
-    elements_raw_inner('def', cnf),
-    elements_raw_inner('note', cnf)
-  )))
+  root = E.cnf(
+    element('nym', cnf),
+    element('gen', cnf),
+    element_raw_inner('etym', cnf),
+    element_raw_inner('usg', cnf),
+    element_raw_inner('def', cnf),
+    element_raw_inner('note', cnf)
+  )
 
   indent(root, 0)
 
@@ -254,19 +253,23 @@ def cnf_build(cnf, schema):
 
 
 def vnf_build(vnf, schema):
+  # this is odd because we don't know how many nyms there will be
   root = E.vnf(*tuple(itertools.chain(
-    elements('name', vnf),
-    elements('nym', vnf),
-    elements('gen', vnf),
-    elements('case', vnf),
-    elements('lang', vnf),
-    elements_raw_inner('place', vnf),
-    elements('date', vnf),
-    (E.bibl(
-      E.key(k),
-      E.loc(l)
-    ) for k, l in zip(vnf['bib_key'], vnf['bib_loc'])),
-    elements_raw_inner('note', vnf)
+    (element('name', vnf),),
+    (E.nym(v) for v in vnf['nym'] if v),
+    (
+      element('gen', vnf),
+      element('case', vnf),
+      E.dim('true' if 'dim' in vnf and vnf['dim'][0] == 'on' else 'false'),
+      element('lang', vnf),
+      element_raw_inner('place', vnf),
+      element('date', vnf),
+      E.bibl(
+        element('key', vnf),
+        element('loc', vnf)
+      ),
+      element_raw_inner('note', vnf)
+    )
   )))
 
   indent(root, 0)
@@ -277,10 +280,10 @@ def vnf_build(vnf, schema):
 
 
 def bib_build(bib, schema):
-  root = E.bibl(*tuple(itertools.chain(
-    elements('key', bib),
-    (lxml.etree.fromstring(val) for val in bib['entry'] if val)
-  )))
+  root = E.bibl(
+    element('key', bib),
+    lxml.etree.fromstring(bib['entry'][0])
+  )
 
   indent(root, 0)
   indent(root[1], 1)
@@ -429,7 +432,7 @@ VNF = FormStruct(
   load_schema(app.config['VNF_SCHEMA']),
   vnf_build,
   lambda x: x['name'][0],
-  ('lang', 'place', 'date', 'bib_key'),
+  ('lang', 'place', 'date', 'key'),
   'vnf.html'
 )
 

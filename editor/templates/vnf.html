@@ -67,6 +67,14 @@
       </tr>
       <tr>
         <th>
+          <label for="dim">Diminutive</label>
+        </th>
+        <td>
+          <input id="dim" name="dim" type="checkbox"/>
+        </td>
+      </tr>
+      <tr>
+        <th>
           <label for="lang">Language</label>
         </th>
         <td>
@@ -91,14 +99,14 @@
       </tr>
       <tr>
         <th>
-          <label for="bib_key">Source</label>
+          <label for="key">Source</label>
         </th>
         <td>
-          <input id="bib_key" name="bib_key" type="text" list="bib_key_list" required onblur="if (this.value) validateBibKey();"/>
+          <input id="key" name="key" type="text" list="bib_key_list" required onblur="if (this.value) validateBibKey();"/>
           <datalist id="bib_key_list">
           </datalist>
-          <label for="bib_loc">@</label> 
-          <input id="bib_loc" name="bib_loc" type="text"/>
+          <label for="loc">@</label>
+          <input id="loc" name="loc" type="text"/>
         </td>
       </tr>
       <tr>

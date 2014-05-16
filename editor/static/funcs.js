@@ -1,5 +1,5 @@
 function setBibKeys() {
-  var klist = document.getElementById('bib_key_list');
+  var klist = document.getElementById('key_list');
 
   // clear key list
   var c;
@@ -21,8 +21,8 @@ function setBibKeys() {
 }
 
 function validateBibKey() {
-  var klist = document.getElementById('bib_key_list');
-  var input = document.getElementById('bib_key');
+  var klist = document.getElementById('key_list');
+  var input = document.getElementById('key');
   
   for (option of klist.options) {
     if (option.value == input.value) {
