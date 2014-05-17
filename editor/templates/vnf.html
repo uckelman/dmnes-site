@@ -18,7 +18,7 @@
     <span>VNF</span>
     <span><a href="bib">Bib</a></span>
   </nav>
-  <form action="" method="post" onsubmit="return validateBibKey();">
+  <form action="" method="post" onsubmit="return validateVNF();">
     <table>
       <tr>
         <th>
@@ -34,7 +34,7 @@
           <label for="nym">Nym</label>
         </th>
         <td>
-          <input id="nym" name="nym" type="text"/>
+          <input id="nym" name="nym" type="text" onblur="if (this.value) validateNym(this);"/>
           <button type="button" onclick="addNymInput(this);">+</button>
         </td>
       </tr>
@@ -102,7 +102,7 @@
           <label for="key">Source</label>
         </th>
         <td>
-          <input id="key" name="key" type="text" list="key_list" required onblur="if (this.value) validateBibKey();"/>
+          <input id="key" name="key" type="text" list="key_list" required onblur="if (this.value) validateBibKey(this);"/>
           <datalist id="key_list">
           </datalist>
           <label for="loc">@</label>
