@@ -186,7 +186,7 @@ def git_push(repo_dir, repo, refspec):
 # Record construction
 #
 
-def prefix_branch(s, maxlen=3):
+def prefix_branch(s, maxlen):
   return os.path.join(*s[:min(maxlen, len(s))])
 
 
@@ -200,19 +200,20 @@ def sanitize_filename(filename):
   return filename
 
 
-def build_prefix_path(basedir, basename):
+def build_prefix_path(basedir, basename, depth):
   basename = sanitize_filename(basename)
-  return os.path.join(basedir, prefix_path(basename), basename + '.xml')
+  return os.path.join(basedir, prefix_path(basename, depth), basename + '.xml')
 
 
 def cnf_path(cnf):
-  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0])
+  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0], 3)
 
 
 def vnf_path(vnf):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['key'][0])
+    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['key'][0]),
+    3
   )
 
 
