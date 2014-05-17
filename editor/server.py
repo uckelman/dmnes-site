@@ -69,7 +69,16 @@ accounts = {
 
 
 #
-# XML schemas
+# User authentication
+#
+
+def auth_user(username, password):
+  user = accounts.get(username, None)
+  return user and user.check_password(password)
+
+
+#
+# XML schemata
 #
 
 def load_schema(filename):
@@ -77,8 +86,9 @@ def load_schema(filename):
     doc = lxml.etree.parse(f)
   return lxml.etree.XMLSchema(doc)
 
+
 #
-# shell out
+# Shell out
 #
 
 class SubprocessError(subprocess32.CalledProcessError):
@@ -114,7 +124,7 @@ def do_cmd(cwd, *args):
 
 
 #
-# bib lookup
+# Bib lookup
 #
 
 def get_bibkeys(repo_dir):
@@ -173,11 +183,11 @@ def git_push(repo_dir, repo, refspec):
 
 
 #
-#
+# Record construction
 #
 
 def prefix_branch(s, maxlen=3):
-  return [s[n-1:n] for n in range(1,maxlen+1)] + [s]
+  return os.path.join(*s[:min(maxlen, len(s))])
 
 
 def sanitize_filename(filename):
@@ -192,7 +202,7 @@ def sanitize_filename(filename):
 
 def build_prefix_path(basedir, basename):
   basename = sanitize_filename(basename)
-  return os.path.join(basedir, *prefix_branch(basename)) + '.xml'
+  return os.path.join(basedir, prefix_path(basename), basename + '.xml')
 
 
 def cnf_path(cnf):
@@ -346,23 +356,6 @@ def push_back_to_git(username):
 
 
 #
-# User authentication
-#
-
-def auth_user(username, password):
-  user = accounts.get(username, None)
-  return user and user.check_password(password)
-
-
-#
-#
-#
-
-def request_size(req):
-  return sum(len(v) for v in req.values())
-
-
-#
 # URL handlers
 #
 
@@ -452,6 +445,10 @@ class FormError(Exception):
   def __init__(self, message):
     super(FormError, self).__init__()
     self.message = message
+
+
+def request_size(req):
+  return sum(len(v) for v in req.values())
 
 
 def handle_entry_form(fstruct):
