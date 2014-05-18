@@ -1,55 +1,80 @@
-function setBibKeys(url) {
-  var klist = document.getElementById('key_list');
-
-  // clear key list
+function setDatalist(dlist, url) {
+  // clear datalist
   var c;
-  while ((c = klist.firstChild)) {
-    klist.removeChild(c);
+  while ((c = dlist.firstChild)) {
+    dlist.removeChild(c);
   }
  
-  // get new list of keys from cur
+  // get new list from url
   var http = new XMLHttpRequest;
   http.open('GET', url, false);
   http.send();
   
-  // insert new children into klist
+  // insert new children into datalist
   if (http.status == 200) {
     for (var line of http.responseText.split('\n')) {
       var opt = document.createElement('option');
       opt.setAttribute('value', line);
-      klist.appendChild(opt);
+      dlist.appendChild(opt);
     }
   }
+}
+
+function validateAgainstDatalist(value, dlist) {
+  for (var option of dlist.options) {
+    if (option.value == value) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function setBibKeys(url) {
+  setDatalist(document.getElementById('key_list'), url);
 }
 
 function validateBibKey(input) {
   var klist = document.getElementById('key_list');
-  
-  for (var option of klist.options) {
-    if (option.value == input.value) {
-      input.setCustomValidity('');
-      return true;
-    }
-  }
+  var result = validateAgainstDatalist(input.value, klist);
+  input.setCustomValidity(result ? '' : 'Unknown bib key.');
+  return result;
+}
 
-  input.setCustomValidity('Unknown bib key.');
-  return false;
+function setNymKeys(input, url) {
+  nlist_id = input.getAttribute('list');
+  setDatalist(document.getElementById(nlist_id), url);
 }
 
 function validateNym(input) {
-  input.setCustomValidity('');
-  return true;
+  var result = true;
+  if (input.value) {
+    nlist_id = input.getAttribute('list');
+    var nlist = document.getElementById(nlist_id);
+    result = validateAgainstDatalist(input.value, nlist);
+  }
+  input.setCustomValidity(result ? '' : 'Unknown nym.');
+  return result;
 }
 
 function addNymInput(button) {
+  this.max_nym = ++this.max_nym || 1; // first additional nym is 1
+  var copy_nym_id = 'nym_' + this.max_nym;
+  var dlist_id = 'nym_list_' + this.max_nym;
+
   // make new nym input
-  var input = document.createElement('input');
-  input.setAttribute('name', 'nym');
-  input.setAttribute('type', 'text');
-  input.onblur = function(event) { if (this.value) validateNym(this); };
+  var orig_nym = document.getElementById('nym_0');
+  var copy_nym = orig_nym.cloneNode(false);
+  copy_nym.setAttribute('id', copy_nym_id);
+  copy_nym.setAttribute('list', dlist_id);
+  copy_nym.value = '';
+
+  // make datalist for new nym
+  var dlist = document.createElement('datalist');
+  dlist.setAttribute('id', dlist_id);
 
   var td = document.createElement('td');
-  td.appendChild(input);
+  td.appendChild(copy_nym);
+  td.appendChild(dlist);
 
   // move the button down a row
   var bi_row = button.parentNode.parentNode;
@@ -72,5 +97,7 @@ function validateVNF() {
     result &= validateNym(input);
   }
 
-  return result;
+  // We must actually return true or false for onsubmit,
+  // not just something coercible. Strange but true.
+  return result == true;
 }

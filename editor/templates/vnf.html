@@ -18,7 +18,7 @@
     <span>VNF</span>
     <span><a href="bib">Bib</a></span>
   </nav>
-  <form action="" method="post" onsubmit="return validateVNF();">
+  <form method="post" onsubmit="return validateVNF();">
     <table>
       <tr>
         <th>
@@ -28,13 +28,14 @@
           <input id="name" name="name" type="text" required autofocus/>
         </td>
       </tr>
-<!-- TODO: nym should autocomplete? from db -->
       <tr>
         <th>
           <label for="nym">Nym</label>
         </th>
         <td>
-          <input id="nym" name="nym" type="text" onblur="if (this.value) validateNym(this);"/>
+          <input id="nym_0" name="nym" type="text" list="nym_list_0" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
+          <datalist id="nym_list_0">
+          </datalist>
           <button type="button" onclick="addNymInput(this);">+</button>
         </td>
       </tr>

@@ -123,17 +123,47 @@ def do_cmd(cwd, *args):
   return '% {}\n{}'.format(' '.join(args), out)
 
 
+def do_cmd_out(cwd, ok, *args):
+  with subprocess32.Popen(
+    args,
+    cwd=cwd,
+    stdout=subprocess32.PIPE,
+    stderr=subprocess32.PIPE
+  ) as proc:
+    out, err = proc.communicate(timeout=10)
+    if not ok(proc.returncode):
+      raise SubprocessError(
+        returncode=proc.returncode,
+        cmd=args,
+        output=out + '\n' + err
+      )
+
+  return out
+
+
+def do_grep(cwd, opts, pat, *paths):
+  res = do_cmd_out(cwd, lambda x: x < 2, 'grep', opts, pat, *paths)
+  lines = res.splitlines()
+  lines.sort()
+  return lines
+
+
 #
-# Bib lookup
+# Lookup
 #
 
 def get_bibkeys(repo_dir):
   bib_dir = app.config['BIB_DIR']
-  res = do_cmd(repo_dir, 'grep', '-hoPr', '<key>\\K[^<]+', bib_dir)
-# FIXME: adjust do_cmd to make it possible to get output only
-  keys = res.splitlines()[1:]
-  keys.sort()
-  return keys
+  return do_grep(repo_dir, '-hoPr', '^\s*<key>\\K[^<]+', bib_dir)
+
+
+def get_nyms(repo_dir, prefix):
+  cnf_dir = app.config['CNF_DIR']
+  prefix_dir = build_prefix_base(cnf_dir, prefix, CNF.prefix_depth)
+  if os.path.exists(os.path.join(repo_dir, prefix_dir)):
+    return do_grep(repo_dir, '-hoPr', '^\s*<nym>\\K[^<]+', prefix_dir)
+  else:
+    return []
 
 
 #
@@ -186,8 +216,9 @@ def git_push(repo_dir, repo, refspec):
 # Record construction
 #
 
-def prefix_branch(s, maxlen):
-  return os.path.join(*s[:min(maxlen, len(s))])
+def prefix_base(s, maxlen):
+  l = min(maxlen, len(s))
+  return os.path.join(*s[:l]) if l else ''
 
 
 def sanitize_filename(filename):
@@ -200,24 +231,29 @@ def sanitize_filename(filename):
   return filename
 
 
+def build_prefix_base(basedir, basename, depth):
+  basename = sanitize_filename(basename)
+  return os.path.join(basedir, prefix_base(basename, depth))
+
+
 def build_prefix_path(basedir, basename, depth):
   basename = sanitize_filename(basename)
-  return os.path.join(basedir, prefix_path(basename, depth), basename + '.xml')
+  return os.path.join(basedir, prefix_base(basename, depth), basename + '.xml')
 
 
-def cnf_path(cnf):
-  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0], 3)
+def cnf_path(cnf, depth):
+  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0], depth)
 
 
-def vnf_path(vnf):
+def vnf_path(vnf, depth):
   return build_prefix_path(
     app.config['VNF_DIR'],
     '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['key'][0]),
-    3
+    depth
   )
 
 
-def bib_path(bib):
+def bib_path(bib, depth):
   return os.path.join(
     app.config['BIB_DIR'],
     sanitize_filename(bib['key'][0])
@@ -403,9 +439,20 @@ def bibkeys():
   return Response(keys, mimetype='text/plain')
 
 
+@app.route('/nyms', methods=['GET'])
+def nyms():
+  if 'username' not in session:
+    abort(401)
+
+  username = session['username']
+  nyms = '\n'.join(get_nyms(repo_for(username), request.args['prefix']))
+  return Response(nyms, mimetype='text/plain')
+
+
 class FormStruct:
-  def __init__(self, path_func, schema, build_func, cn_func, keepers, templ):
+  def __init__(self, path_func, prefix_depth, schema, build_func, cn_func, keepers, templ):
     self.path_func = path_func
+    self.prefix_depth = prefix_depth
     self.schema = schema
     self.build_func = build_func
     self.cn_func = cn_func
@@ -415,6 +462,7 @@ class FormStruct:
 
 CNF = FormStruct(
   cnf_path,
+  3,
   load_schema(app.config['CNF_SCHEMA']),
   cnf_build,
   lambda x: x['nym'][0],
@@ -424,6 +472,7 @@ CNF = FormStruct(
 
 VNF = FormStruct(
   vnf_path,
+  3,
   load_schema(app.config['VNF_SCHEMA']),
   vnf_build,
   lambda x: x['name'][0],
@@ -433,6 +482,7 @@ VNF = FormStruct(
 
 BIB = FormStruct(
   bib_path,
+  0,
 #  load_schema(app.config['BIB_SCHEMA']),
   None,
   bib_build,
@@ -467,7 +517,7 @@ def handle_entry_form(fstruct):
       form = {k: [v.strip() for v in l] for k, l in request.form.iterlists()}
 
       username = session['username']
-      localpath = fstruct.path_func(form)
+      localpath = fstruct.path_func(form, fstruct.prefix_depth)
       fullpath = os.path.join(repo_for(username), localpath)
 
       # don't clobber existing entries
