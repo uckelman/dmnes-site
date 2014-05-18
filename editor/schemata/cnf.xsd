@@ -7,6 +7,7 @@
   <xs:complexType name="cnf_t">
     <xs:sequence>
       <xs:element name="nym" type="nym_t"/>
+      <xs:element name="meta" type="meta_t"/>
       <xs:element name="gen" type="gen_t"/>
       <xs:element name="etym" type="etym_t"/>
       <xs:element name="usg" type="usg_t" minOccurs="0"/>

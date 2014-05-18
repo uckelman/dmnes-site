@@ -286,6 +286,9 @@ def indent(node, depth):
 def cnf_build(cnf, schema):
   root = E.cnf(
     element('nym', cnf),
+    E.meta(
+      E.live('false')
+    ),
     element('gen', cnf),
     element_raw_inner('etym', cnf),
     element_raw_inner('usg', cnf),
@@ -302,7 +305,12 @@ def cnf_build(cnf, schema):
 def vnf_build(vnf, schema):
   # this is odd because we don't know how many nyms there will be
   root = E.vnf(*tuple(itertools.chain(
-    (element('name', vnf),),
+    (
+      element('name', vnf),
+      E.meta(
+        E.live('false')
+      )
+    ),
     (E.nym(v) for v in vnf['nym'] if v),
     (
       element('gen', vnf),

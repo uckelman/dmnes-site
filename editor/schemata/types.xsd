@@ -16,6 +16,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- meta_t definition -->
+  <xs:complexType name="meta_t">
+    <xs:all>
+      <xs:element name="live" type="live_t"/>
+    </xs:all>
+  </xs:complexType>
+
+  <!-- live_t definition -->
+  <xs:simpleType name="live_t">
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+
   <!-- nym_t definition -->
   <xs:simpleType name="nym_t">
     <xs:restriction base="nonempty_string_t"/>
