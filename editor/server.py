@@ -113,7 +113,7 @@ def do_cmd(cwd, *args):
     stdout=subprocess32.PIPE,
     stderr=subprocess32.STDOUT
   ) as proc:
-    out = proc.communicate(timeout=10)[0]
+    out = proc.communicate(timeout=30)[0]
     if proc.returncode:
       raise SubprocessError(
         returncode=proc.returncode,
@@ -192,9 +192,12 @@ def git_config_user(repo_dir, name, email):
 #def git_clone_branch(base_dir, repo_url, repo_dir, branch):
 #  do_git(base_dir, 'clone', '-b', branch, '--single-branch', repo_url, repo_dir)
 
+def git_create_branch(repo_dir, branch):
+  do_git(repo_dir, 'checkout', '-b', branch)
+
 
 def git_checkout_branch(repo_dir, branch):
-  do_git(repo_dir, 'checkout', '-B', branch)
+  do_git(repo_dir, 'checkout', branch)
 
 
 def git_add_file(repo_dir, path):
@@ -377,11 +380,11 @@ def prepare_git(username):
     user = accounts[username]
     git_config_user(upath, user.realname, user.email)
     git_config(upath, 'push.default', 'simple')
-
-  git_checkout_branch(upath, username)
-
-  if repo_exists:
+    git_create_branch(upath, username)
+    git_push(upath, 'origin', username + ':' + username)
+  else:
     # ensure existing repo is current
+    git_checkout_branch(upath, username)
     git_pull(upath, 'origin', username)
     git_pull(upath, 'origin', 'master')
  
