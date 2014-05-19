@@ -1,22 +1,31 @@
 function setDatalist(dlist, url) {
-  // clear datalist
-  var c;
-  while ((c = dlist.firstChild)) {
-    dlist.removeChild(c);
-  }
- 
+  var lastmod = dlist.getAttribute('data-lastmod') || new Date(0).toUTCString();
+
   // get new list from url
   var http = new XMLHttpRequest;
   http.open('GET', url, false);
+  http.setRequestHeader('If-Modified-Since', lastmod);
   http.send();
   
-  // insert new children into datalist
+  if (http.status != 304) {
+    // clear datalist on any response except 304 Not Modified
+    var c;
+    while ((c = dlist.firstChild)) {
+      dlist.removeChild(c);
+    }
+  }
+
   if (http.status == 200) {
+    // insert new children into datalist
     for (var line of http.responseText.split('\n')) {
       var opt = document.createElement('option');
       opt.setAttribute('value', line);
       dlist.appendChild(opt);
     }
+
+    // update the date of last modification
+    lastmod = http.getResponseHeader('Last-Modified');
+    dlist.setAttribute('data-lastmod', lastmod);
   }
 }
 

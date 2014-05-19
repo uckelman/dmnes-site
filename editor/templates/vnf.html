@@ -3,13 +3,6 @@
 {% block head %}
   {{ super() }}
   <script src="{{ url_for('static', filename='funcs.js') }}" type="application/javascript"></script>
-  <script language="javascript">
-    var prev_onload = window.onload ? window.onload : function() {};
-    window.onload = function() {
-      prev_onload();
-      setBibKeys("{{ url_for('bibkeys') }}");
-    };
-  </script>
 {% endblock %}
 {% block content %}
   <nav>
@@ -103,7 +96,7 @@
           <label for="key">Source</label>
         </th>
         <td>
-          <input id="key" name="key" type="text" list="key_list" required onblur="if (this.value) validateBibKey(this);"/>
+          <input id="key" name="key" type="text" list="key_list" required onfocus="setBibKeys('{{ url_for('bibkeys') }}');" onblur="if (this.value) validateBibKey(this);"/>
           <datalist id="key_list">
           </datalist>
           <label for="loc">@</label>

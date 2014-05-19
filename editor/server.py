@@ -2,6 +2,7 @@
 
 ##!/usr/bin/python3 -b
 
+import datetime
 import itertools
 import os
 #import subprocess
@@ -420,6 +421,10 @@ def login():
       session['username'] = username
       prepare_git(username)
       flash('Welcome, ' + username + '.', 'notice')
+
+      session['cnf'] = session['vnf'] = session['bib'] \
+                                      = datetime.datetime.utcnow()
+
       return redirect(url_for('cnf'))
     else:
       flash('Invalid username or password!', 'error')
@@ -436,15 +441,34 @@ def logout():
   return redirect(url_for('login'))
 
 
-# FIXME: Do something to indicate date of modification to prevent staleness
+def conditional_response(key, func, username):
+  mtime_local = session['bib']
+
+  RFC1123 = '%a, %d %b %Y %H:%M:%S GMT'
+
+  ims = request.headers.get('If-Modified-Since')
+  try:
+    mtime_remote = datetime.datetime.strptime(ims, RFC1123)
+  except ValueError:
+    mtime_remote = datetime.datetime(datetime.MINYEAR, 1, 1)
+
+  if mtime_local > mtime_remote:
+    lines = func(repo_for(username))
+    response = Response('\n'.join(lines), mimetype='text/plain')
+    response.headers.add('Last-Modified', mtime_local.strftime(RFC1123))
+  else:
+    response = Response(status=304)
+
+  return response
+
+
 @app.route('/bibkeys', methods=['GET'])
 def bibkeys():
   if 'username' not in session:
     abort(401)
 
   username = session['username']
-  keys = '\n'.join(get_bibkeys(repo_for(username)))
-  return Response(keys, mimetype='text/plain')
+  return conditional_response('bib', get_bibkeys, username)
 
 
 @app.route('/nyms', methods=['GET'])
@@ -453,8 +477,9 @@ def nyms():
     abort(401)
 
   username = session['username']
-  nyms = '\n'.join(get_nyms(repo_for(username), request.args['prefix']))
-  return Response(nyms, mimetype='text/plain')
+  prefix = request.args['prefix']
+  lines = get_nyms(repo_for(username), prefix)
+  return Response('\n'.join(lines), mimetype='text/plain')
 
 
 class FormStruct:
@@ -480,7 +505,7 @@ CNF = FormStruct(
 
 VNF = FormStruct(
   vnf_path,
-  3,
+  6,
   load_schema(app.config['VNF_SCHEMA']),
   vnf_build,
   lambda x: x['name'][0],
@@ -542,6 +567,7 @@ def handle_entry_form(fstruct):
 
       # write the entry and report that
       commit_to_git(username, localpath, tree)
+      session[request.path.lstrip('/')] = datetime.datetime.utcnow()
       flash('Added ' + fstruct.cn_func(form), 'notice')
 
       # retain some input values for next entry
