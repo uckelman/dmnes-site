@@ -52,21 +52,8 @@ class User(object):
     return werkzeug.security.check_password_hash(self.pwhash, password)
 
 
-# TODO: move accounts out of the source
-accounts = {
-  'liana': User(
-    'liana',  # yoIN3i)2k
-    'pbkdf2:sha1:1000$N64I7Fg1$5ed44d1125456db5a6ab8a36f88f0577a9f91e13',
-    'Sara L. Uckelman',
-    'liana@ellipsis.cx'
-  ),
-  'uckelman': User(
-    'uckelman',
-    'pbkdf2:sha1:1000$fPQl6n0t$3988730ff8770775e31ca325758b5e059684ca4b',
-    'Joel Uckelman',
-    'uckelman@nomic.net'
-  ),
-}
+import users
+accounts = { k: User(*v) for k, v in users.accounts.iteritems() }
 
 
 #
