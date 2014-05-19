@@ -57,7 +57,7 @@
           <input id="nym_0" name="nym" type="text" list="nym_list_0" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
           <datalist id="nym_list_0">
           </datalist>
-          <button id="add_nym" type="button" onclick="addNymInput(this);">+</button>
+          <button id="add_nym" type="button" tabindex="-1" onclick="addNymInput(this);">+</button>
         </td>
       </tr>
       <tr>
