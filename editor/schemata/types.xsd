@@ -50,7 +50,7 @@
   <!-- case_t definition -->
   <xs:simpleType name="case_t">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="unc"/>
+      <xs:enumeration value="n/a"/>
       <xs:enumeration value="abl"/>
       <xs:enumeration value="acc"/>
       <xs:enumeration value="dat"/>
