@@ -271,13 +271,16 @@ def element(key, obj):
     return ''
 
 
-def element_raw_inner(key, obj):
+def element_raw_inner(key, obj, skip_empty=True):
   try:
     val = obj[key][0]
-  except KeyError:
+  except (KeyError, IndexError):
+    val = ''
+
+  if skip_empty and not val:
     return ''
 
-  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val)) if val else ''
+  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
 
 
 def indent(node, depth):
@@ -294,7 +297,7 @@ def cnf_build(cnf, schema):
       E.live('false')
     ),
     element('gen', cnf),
-    element_raw_inner('etym', cnf),
+    element_raw_inner('etym', cnf, skip_empty=False),
     element_raw_inner('usg', cnf),
     element_raw_inner('def', cnf),
     element_raw_inner('note', cnf)
