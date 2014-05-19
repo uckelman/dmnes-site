@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "form.html" %}
 {% block title %}CNF input{% endblock %}
 {% block head %}
   {{ super() }}
@@ -16,12 +16,6 @@
   {% endif %}
 {% endblock %}
 {% block content %}
-  <nav>
-    <span><a href="logout">Logout</a></span>
-    <span>CNF</span>
-    <span><a href="vnf">VNF</a></span>
-    <span><a href="bib">Bib</a></span>
-  </nav>
   <form method="post">
     <table>
       <tr>

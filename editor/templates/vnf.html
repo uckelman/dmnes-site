@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "form.html" %}
 {% block title %}VNF input{% endblock %}
 {% block head %}
   {{ super() }}
@@ -33,12 +33,6 @@
   {% endif %}
 {% endblock %}
 {% block content %}
-  <nav>
-    <span><a href="logout">Logout</a></span> 
-    <span><a href="cnf">CNF</a></span>
-    <span>VNF</span>
-    <span><a href="bib">Bib</a></span>
-  </nav>
   <form method="post" onsubmit="return validateVNF();">
     <table>
       <tr>

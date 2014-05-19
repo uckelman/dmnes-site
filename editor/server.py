@@ -575,7 +575,7 @@ def handle_entry_form(fstruct):
 
       # write the entry and report that
       commit_to_git(username, localpath, tree)
-      session[request.path.lstrip('/')] = datetime.datetime.utcnow()
+      session[request.endpoint] = datetime.datetime.utcnow()
       flash('Added ' + fstruct.cn_func(form), 'notice')
 
       # retain some input values for next entry
