@@ -448,7 +448,7 @@ def logout():
 
 
 def conditional_response(key, func, username):
-  mtime_local = session['bib']
+  mtime_local = session[key]
 
   RFC1123 = '%a, %d %b %Y %H:%M:%S GMT'
 
