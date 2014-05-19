@@ -431,7 +431,7 @@ def login():
       session['cnf'] = session['vnf'] = session['bib'] \
                                       = datetime.datetime.utcnow()
 
-      return redirect(url_for('cnf'))
+      return redirect(url_for('vnf'))
     else:
       flash('Invalid username or password!', 'error')
 
