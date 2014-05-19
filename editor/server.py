@@ -545,7 +545,7 @@ def handle_entry_form(fstruct):
   if 'username' not in session:
     abort(401)
 
-  vals = {}
+  vals = None
 
   if request.method == 'POST':
     try:
@@ -553,7 +553,9 @@ def handle_entry_form(fstruct):
         abort(413)
 
       # strip leading and trailing whitespace from form input
-      form = {k: [v.strip() for v in l] for k, l in request.form.iterlists()}
+      form = werkzeug.datastructures.MultiDict([
+        (k, v.strip()) for (k, v) in request.form.iteritems(multi=True)
+      ])
 
       username = session['username']
       localpath = fstruct.path_func(form, fstruct.prefix_depth)
@@ -577,12 +579,14 @@ def handle_entry_form(fstruct):
       flash('Added ' + fstruct.cn_func(form), 'notice')
 
       # retain some input values for next entry
-      vals = {k: request.form[k] for k in fstruct.keepers}
+      vals = werkzeug.datastructures.MultiDict([
+        (k, v) for (k, v) in form.iteritems(multi=True) if k in fstruct.keepers
+      ])
 
     except FormError as e:
       flash(e.message, 'error')
       # retain all input values on error
-      vals = request.form
+      vals = form
 
   return render_template(fstruct.templ, vals=vals)
 

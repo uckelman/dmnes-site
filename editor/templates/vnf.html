@@ -2,7 +2,35 @@
 {% block title %}VNF input{% endblock %}
 {% block head %}
   {{ super() }}
+
   <script src="{{ url_for('static', filename='funcs.js') }}" type="application/javascript"></script>
+
+  {% if vals %}
+    <script language="javascript">
+      // fill in the form as directed, but keep it clearable
+      window.onload = function() {
+        {% for k, v in vals.items() if k != 'nym' and v %}
+          document.getElementById("{{ k }}").value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
+        {% endfor %}
+
+        {% if vals.getlist('nym') %}
+          {% if vals.getlist('nym')|length > 1 %}
+            // ensure there are enough nym inputs
+            var button = document.getElementById("add_nym");
+            for (var i = 1; i < {{ vals.getlist('nym')|length }}; ++i) {
+              addNymInput(button);
+            }
+          {% endif %}
+
+          // fill the nym inputs
+          var nlist = document.getElementsByName("nym");
+          {% for v in vals.getlist('nym') %}
+            nlist[{{ loop.index0 }}].value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
+          {% endfor %}
+        {% endif %}
+      };
+    </script>
+  {% endif %}
 {% endblock %}
 {% block content %}
   <nav>
@@ -29,7 +57,7 @@
           <input id="nym_0" name="nym" type="text" list="nym_list_0" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
           <datalist id="nym_list_0">
           </datalist>
-          <button type="button" onclick="addNymInput(this);">+</button>
+          <button id="add_nym" type="button" onclick="addNymInput(this);">+</button>
         </td>
       </tr>
       <tr>

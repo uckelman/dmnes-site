@@ -4,19 +4,6 @@
 {% block head %}
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %}</title>
-
-  {% if vals %}
-    <script language="javascript">
-      // fill in the form as directed, but keep it clearable
-      window.onload = function() {
-        {% for k, v in vals.items() %}
-          {% if v %}
-            document.getElementById("{{ k }}").value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
-          {% endif %}
-        {% endfor %}
-      };
-    </script>
-  {% endif %}
 {% endblock %}
 </head>
 <body>

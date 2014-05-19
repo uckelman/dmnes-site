@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 {% block title %}CNF input{% endblock %}
+{% block head %}
+  {{ super() }}
+  {% if vals %}
+    <script language="javascript">
+      // fill in the form as directed, but keep it clearable
+      window.onload = function() {
+        {% for k, v in vals.items() %}
+          {% if v %}
+            document.getElementById("{{ k }}").value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
+          {% endif %}
+        {% endfor %}
+      };
+    </script>
+  {% endif %}
+{% endblock %}
 {% block content %}
   <nav>
     <span><a href="logout">Logout</a></span>
