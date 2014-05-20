@@ -2,6 +2,8 @@
 
 ##!/usr/bin/python3 -b
 
+from __future__ import unicode_literals
+
 import datetime
 import itertools
 import os
@@ -108,10 +110,10 @@ def do_cmd(cwd, *args):
       raise SubprocessError(
         returncode=proc.returncode,
         cmd=args,
-        output=out
+        output=out.decode('utf-8')
       )
 
-  return '% {}\n{}'.format(' '.join(args), out)
+  return '% {}\n{}'.format(' '.join(args), out.decode('utf-8'))
 
 
 def do_cmd_out(cwd, ok, *args):
@@ -126,10 +128,10 @@ def do_cmd_out(cwd, ok, *args):
       raise SubprocessError(
         returncode=proc.returncode,
         cmd=args,
-        output=out + '\n' + err
+        output=out.decode('utf-8') + '\n' + err.decode('utf-8')
       )
 
-  return out
+  return out.decode('utf-8')
 
 
 def do_grep(cwd, opts, pat, *paths):
@@ -242,7 +244,7 @@ def cnf_path(cnf, depth):
 def vnf_path(vnf, depth):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    u'{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
+    '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
     depth
   )
 
@@ -270,7 +272,7 @@ def element_raw_inner(key, obj, skip_empty=True):
   if skip_empty and not val:
     return ''
 
-  return lxml.etree.fromstring(u'<{0}>{1}</{0}>'.format(key, val))
+  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
 
 
 def indent(node, depth):
@@ -355,8 +357,8 @@ def write_tree(tree, path):
   with open(path, 'wb') as f:
     tree.write(
       f,
-      xml_declaration='<?xml version="1.0" encoding="UTF-8"?>',
-      encoding='UTF-8',
+      xml_declaration=True,
+      encoding='utf-8',
       pretty_print=False
     )
 
@@ -389,7 +391,7 @@ def commit_to_git(username, path, tree):
   write_tree(tree, os.path.join(upath, path))
   git_add_file(upath, path)
   user = accounts[username]
-  author = u'{} <{}>'.format(user.realname, user.email)
+  author = '{} <{}>'.format(user.realname, user.email)
   msg = 'Added ' + path
   git_commit_file(upath, author, msg, path)
 
