@@ -56,7 +56,7 @@ class User(object):
 
 
 import users
-accounts = { k: User(*v) for k, v in users.accounts.iteritems() }
+accounts = { x[0]: User(*x) for x in users.accounts }
 
 
 #
