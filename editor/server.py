@@ -252,7 +252,7 @@ def vnf_path(vnf, depth):
 def bib_path(bib, depth):
   return os.path.join(
     app.config['BIB_DIR'],
-    sanitize_filename(bib['key'])
+    sanitize_filename(bib['key']) + '.xml'
   )
 
 
