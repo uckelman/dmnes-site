@@ -89,7 +89,7 @@ class SubprocessError(subprocess32.CalledProcessError):
 
   def __str__(self):
     indent = '  '
-    return u'{}\n\nOutput:\n{}{}'.format(
+    return '{}\n\nOutput:\n{}{}'.format(
       super(SubprocessError, self).__str__(),
       indent,
       ('\n' + indent).join(self.output.splitlines())
@@ -111,7 +111,7 @@ def do_cmd(cwd, *args):
         output=out
       )
 
-  return u'% {}\n{}'.format(' '.join(args), out)
+  return '% {}\n{}'.format(' '.join(args), out)
 
 
 def do_cmd_out(cwd, ok, *args):
