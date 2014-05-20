@@ -48,7 +48,7 @@
           <label for="nym">Nym</label>
         </th>
         <td>
-          <input id="nym_0" name="nym" type="text" list="nym_list_0" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
+          <input id="nym_0" name="nym" type="text" list="nym_list_0" autocomplete="off" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
           <datalist id="nym_list_0">
           </datalist>
           <button id="add_nym" type="button" tabindex="-1" onclick="addNymInput(this);">+</button>
@@ -118,7 +118,7 @@
           <label for="key">Source</label>
         </th>
         <td>
-          <input id="key" name="key" type="text" list="key_list" required onfocus="setBibKeys('{{ url_for('bibkeys') }}');" onblur="if (this.value) validateBibKey(this);"/>
+          <input id="key" name="key" type="text" list="key_list" autocomplete="off" required onfocus="setBibKeys('{{ url_for('bibkeys') }}');" onblur="if (this.value) validateBibKey(this);"/>
           <datalist id="key_list">
           </datalist>
           <label for="loc">@</label>
