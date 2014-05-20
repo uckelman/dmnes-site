@@ -294,6 +294,7 @@ def cnf_build(cnf, schema):
   )
 
   indent(root, 0)
+  indent(root.find('meta'), 1)
 
   schema.assertValid(root)
   return lxml.etree.ElementTree(root)
@@ -325,6 +326,7 @@ def vnf_build(vnf, schema):
   )))
 
   indent(root, 0)
+  indent(root.find('meta'), 1)
   indent(root.find('bibl'), 1)
 
   schema.assertValid(root)
