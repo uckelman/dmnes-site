@@ -236,13 +236,13 @@ def build_prefix_path(basedir, basename, depth):
 
 
 def cnf_path(cnf, depth):
-  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'][0], depth)
+  return build_prefix_path(app.config['CNF_DIR'], cnf['nym'], depth)
 
 
 def vnf_path(vnf, depth):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'][0], vnf['date'][0], vnf['key'][0]),
+    '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
     depth
   )
 
@@ -250,21 +250,21 @@ def vnf_path(vnf, depth):
 def bib_path(bib, depth):
   return os.path.join(
     app.config['BIB_DIR'],
-    sanitize_filename(bib['key'][0])
+    sanitize_filename(bib['key'])
   )
 
 
 def element(key, obj):
   try:
-    return E(key, obj[key][0])
+    return E(key, obj[key])
   except KeyError:
     return ''
 
 
 def element_raw_inner(key, obj, skip_empty=True):
   try:
-    val = obj[key][0]
-  except (KeyError, IndexError):
+    val = obj[key]
+  except KeyError:
     val = ''
 
   if skip_empty and not val:
@@ -308,11 +308,11 @@ def vnf_build(vnf, schema):
         E.live('false')
       )
     ),
-    (E.nym(v) for v in vnf['nym'] if v),
+    (E.nym(v) for v in vnf.getlist('nym') if v),
     (
       element('gen', vnf),
       element('case', vnf),
-      E.dim('true' if 'dim' in vnf and vnf['dim'][0] == 'on' else 'false'),
+      E.dim('true' if 'dim' in vnf and vnf['dim'] == 'on' else 'false'),
       element('lang', vnf),
       element_raw_inner('place', vnf),
       element('date', vnf),
@@ -334,7 +334,7 @@ def vnf_build(vnf, schema):
 def bib_build(bib, schema):
   root = E.bibl(
     element('key', bib),
-    lxml.etree.fromstring(bib['entry'][0])
+    lxml.etree.fromstring(bib['entry'])
   )
 
   indent(root, 0)
@@ -494,7 +494,7 @@ CNF = FormStruct(
   3,
   load_schema(app.config['CNF_SCHEMA']),
   cnf_build,
-  lambda x: x['nym'][0],
+  lambda x: x['nym'],
   (),
   'cnf.html'
 )
@@ -504,7 +504,7 @@ VNF = FormStruct(
   6,
   load_schema(app.config['VNF_SCHEMA']),
   vnf_build,
-  lambda x: x['name'][0],
+  lambda x: x['name'],
   ('lang', 'place', 'date', 'key'),
   'vnf.html'
 )
@@ -515,7 +515,7 @@ BIB = FormStruct(
 #  load_schema(app.config['BIB_SCHEMA']),
   None,
   bib_build,
-  lambda x: x['key'][0],
+  lambda x: x['key'],
   (),
   'bib.html'
 )
