@@ -89,7 +89,7 @@ class SubprocessError(subprocess32.CalledProcessError):
 
   def __str__(self):
     indent = '  '
-    return '{}\n\nOutput:\n{}{}'.format(
+    return u'{}\n\nOutput:\n{}{}'.format(
       super(SubprocessError, self).__str__(),
       indent,
       ('\n' + indent).join(self.output.splitlines())
@@ -111,7 +111,7 @@ def do_cmd(cwd, *args):
         output=out
       )
 
-  return '% {}\n{}'.format(' '.join(args), out)
+  return u'% {}\n{}'.format(' '.join(args), out)
 
 
 def do_cmd_out(cwd, ok, *args):
@@ -242,7 +242,7 @@ def cnf_path(cnf, depth):
 def vnf_path(vnf, depth):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
+    u'{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
     depth
   )
 
@@ -270,7 +270,7 @@ def element_raw_inner(key, obj, skip_empty=True):
   if skip_empty and not val:
     return ''
 
-  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
+  return lxml.etree.fromstring(u'<{0}>{1}</{0}>'.format(key, val))
 
 
 def indent(node, depth):
@@ -389,7 +389,7 @@ def commit_to_git(username, path, tree):
   write_tree(tree, os.path.join(upath, path))
   git_add_file(upath, path)
   user = accounts[username]
-  author = '{} <{}>'.format(user.realname, user.email)
+  author = u'{} <{}>'.format(user.realname, user.email)
   msg = 'Added ' + path
   git_commit_file(upath, author, msg, path)
 
