@@ -5,10 +5,10 @@
 
   <script src="{{ url_for('static', filename='funcs.js') }}" type="application/javascript"></script>
 
-  {% if vals %}
-    <script language="javascript">
-      // fill in the form as directed, but keep it clearable
-      window.onload = function() {
+  <script language="javascript">
+    window.onload = function() {
+      {% if vals %}
+        // fill in the form as directed, but keep it clearable
         {% for k, v in vals.items() if k != 'nym' and v %}
           document.getElementById("{{ k }}").value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
         {% endfor %}
@@ -28,9 +28,14 @@
             nlist[{{ loop.index0 }}].value = "{{ v|replace('\\', '\\\\')|replace('"', '\\"')|safe }}";
           {% endfor %}
         {% endif %}
-      };
-    </script>
-  {% endif %}
+      {% endif %}
+
+      // TODO: do these asynchronously
+      // get the nyms and bib keys
+      setBibKeys('{{ url_for('bibkeys') }}');
+      setNyms('{{ url_for('nyms') }}');
+    };
+  </script>
 {% endblock %}
 {% block content %}
   <form method="post" onsubmit="return validateVNF();">
@@ -48,8 +53,8 @@
           <label for="nym">Nym</label>
         </th>
         <td>
-          <input id="nym_0" name="nym" type="text" list="nym_list_0" autocomplete="off" onblur="validateNym(this);" oninput="setNymKeys(this, '{{ url_for('nyms') }}?prefix=' + encodeURIComponent(this.value));"/>
-          <datalist id="nym_list_0">
+          <input id="nym_0" name="nym" type="text" list="nym_list" autocomplete="off" onfocus="setNyms('{{ url_for('nyms') }}');" onblur="validateNym(this);"/>
+          <datalist id="nym_list">
           </datalist>
           <button id="add_nym" type="button" tabindex="-1" onclick="addNymInput(this);">+</button>
         </td>

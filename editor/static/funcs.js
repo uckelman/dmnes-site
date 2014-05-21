@@ -49,9 +49,8 @@ function validateBibKey(input) {
   return result;
 }
 
-function setNymKeys(input, url) {
-  nlist_id = input.getAttribute('list');
-  setDatalist(document.getElementById(nlist_id), url);
+function setNyms(url) {
+  setDatalist(document.getElementById('nym_list'), url);
 }
 
 function validateNym(input) {
@@ -68,22 +67,16 @@ function validateNym(input) {
 function addNymInput(button) {
   this.max_nym = ++this.max_nym || 1; // first additional nym is 1
   var copy_nym_id = 'nym_' + this.max_nym;
-  var dlist_id = 'nym_list_' + this.max_nym;
 
   // make new nym input
   var orig_nym = document.getElementById('nym_0');
   var copy_nym = orig_nym.cloneNode(false);
   copy_nym.setAttribute('id', copy_nym_id);
-  copy_nym.setAttribute('list', dlist_id);
+  copy_nym.setAttribute('list', 'nym_list');
   copy_nym.value = '';
-
-  // make datalist for new nym
-  var dlist = document.createElement('datalist');
-  dlist.setAttribute('id', dlist_id);
 
   var td = document.createElement('td');
   td.appendChild(copy_nym);
-  td.appendChild(dlist);
 
   // move the button down a row
   var bi_row = button.parentNode.parentNode;

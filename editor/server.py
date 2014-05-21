@@ -150,13 +150,9 @@ def get_bibkeys(repo_dir):
   return do_grep(repo_dir, '-hoPr', '^\s*<key>\\K[^<]+', bib_dir)
 
 
-def get_nyms(repo_dir, prefix):
+def get_nyms(repo_dir):
   cnf_dir = app.config['CNF_DIR']
-  prefix_dir = build_prefix_base(cnf_dir, prefix, CNF.prefix_depth)
-  if os.path.exists(os.path.join(repo_dir, prefix_dir)):
-    return do_grep(repo_dir, '-hoPr', '^\s*<nym>\\K[^<]+', prefix_dir)
-  else:
-    return []
+  return do_grep(repo_dir, '-hoPr', '^\s*<nym>\\K[^<]+', cnf_dir)
 
 
 #
@@ -477,9 +473,7 @@ def nyms():
     abort(401)
 
   username = session['username']
-  prefix = request.args['prefix']
-  lines = get_nyms(repo_for(username), prefix)
-  return Response('\n'.join(lines), mimetype='text/plain')
+  return conditional_response('cnf', get_nyms, username)
 
 
 class FormStruct:
