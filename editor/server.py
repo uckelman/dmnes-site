@@ -550,7 +550,9 @@ def handle_entry_form(fstruct):
       fullpath = os.path.join(repo_for(username), localpath)
 
       # don't clobber existing entries
-      if os.path.exists(fullpath):
+# Python 3:
+#      if os.path.exists(fullpath):
+      if os.path.exists(fullpath.encode('utf-8')):
         raise FormError(fullpath + ' already exists')
 
       # validate the entry
