@@ -344,8 +344,10 @@ def bib_build(bib, schema):
 
 
 def write_tree(tree, path):
+  # Python 3: no need to encode
+  path = path.encode('utf-8')
   try:
-    os.makedirs(os.path.dirname(path.encode('utf-8')))
+    os.makedirs(os.path.dirname(path))
   except os.error:
     pass
 # Python 3:
