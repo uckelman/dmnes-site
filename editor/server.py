@@ -100,38 +100,38 @@ class SubprocessError(subprocess32.CalledProcessError):
 
 def do_cmd(cwd, *args):
   with subprocess32.Popen(
-    args,
+    [a.encode('utf-8') for a in args],
     cwd=cwd,
     stdout=subprocess32.PIPE,
     stderr=subprocess32.STDOUT
   ) as proc:
-    out = proc.communicate(timeout=30)[0]
+    out = proc.communicate(timeout=30)[0].decode('utf-8')
     if proc.returncode:
       raise SubprocessError(
         returncode=proc.returncode,
         cmd=args,
-        output=out.decode('utf-8')
+        output=out
       )
 
-  return '% {}\n{}'.format(' '.join(args), out.decode('utf-8'))
+  return '% {}\n{}'.format(' '.join(args), out)
 
 
 def do_cmd_out(cwd, ok, *args):
   with subprocess32.Popen(
-    args,
+    [a.encode('utf-8') for a in args],
     cwd=cwd,
     stdout=subprocess32.PIPE,
     stderr=subprocess32.PIPE
   ) as proc:
-    out, err = proc.communicate(timeout=10)
+    out, err = [x.decode('utf-8') for x in proc.communicate(timeout=10)]
     if not ok(proc.returncode):
       raise SubprocessError(
         returncode=proc.returncode,
         cmd=args,
-        output=out.decode('utf-8') + '\n' + err.decode('utf-8')
+        output=out + '\n' + err
       )
 
-  return out.decode('utf-8')
+  return out
 
 
 def do_grep(cwd, opts, pat, *paths):
