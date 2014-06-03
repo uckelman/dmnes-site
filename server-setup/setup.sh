@@ -86,7 +86,7 @@ systemctl enable postgrey.service
 etckeeper commit 'Set up postfix.'
 
 # install apache
-yum install -y httpd mod_ssl mod_wsgi
+yum install -y httpd mod_ssl python3-mod_wsgi
 echo '
 # Load vhost files in the "/etc/httpd/vhost.d" directory, if any.
 IncludeOptional vhost.d/*.conf' >>/etc/httpd/conf/httpd.conf
@@ -97,7 +97,7 @@ systemctl enable httpd.service
 etckeeper commit 'Set up apache.'
 
 # install packages needed by dmnes editor
-yum install -y python-flask python-lxml python-subprocess32
+yum install -y python3-flask python3-lxml
 
 useradd -s /sbin/nologin editor 
 sudo -u editor ssh-keygen -t rsa -N "" -f /home/editor/.ssh/id_rsa

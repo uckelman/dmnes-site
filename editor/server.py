@@ -1,14 +1,9 @@
-#!/usr/bin/python -3
-
-##!/usr/bin/python3 -b
-
-from __future__ import unicode_literals
+#!/usr/bin/python3 -b
 
 import datetime
 import itertools
 import os
-#import subprocess
-import subprocess32 # use until we move to Python 3
+import subprocess
 import traceback
 import unicodedata
 
@@ -23,7 +18,9 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
+#  REPO_URL='git@github.com:SaraUckelman/dmnes.git',
   REPO_URL='git@github.com:uckelman/test.git',
+#  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
   USERS_DIR='users',
   CNF_DIR='CNFs',
   VNF_DIR='VNFs',
@@ -84,7 +81,7 @@ def load_schema(filename):
 # Shell out
 #
 
-class SubprocessError(subprocess32.CalledProcessError):
+class SubprocessError(subprocess.CalledProcessError):
   def __init__(self, **kwargs):
     super(SubprocessError, self).__init__(**kwargs)
 
@@ -99,11 +96,11 @@ class SubprocessError(subprocess32.CalledProcessError):
 
 
 def do_cmd(cwd, *args):
-  with subprocess32.Popen(
-    [a.encode('utf-8') for a in args],
+  with subprocess.Popen(
+    args,
     cwd=cwd,
-    stdout=subprocess32.PIPE,
-    stderr=subprocess32.STDOUT
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT
   ) as proc:
     out = proc.communicate(timeout=30)[0].decode('utf-8')
     if proc.returncode:
@@ -117,11 +114,11 @@ def do_cmd(cwd, *args):
 
 
 def do_cmd_out(cwd, ok, *args):
-  with subprocess32.Popen(
-    [a.encode('utf-8') for a in args],
+  with subprocess.Popen(
+    args,
     cwd=cwd,
-    stdout=subprocess32.PIPE,
-    stderr=subprocess32.PIPE
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE
   ) as proc:
     out, err = [x.decode('utf-8') for x in proc.communicate(timeout=10)]
     if not ok(proc.returncode):
@@ -344,14 +341,7 @@ def bib_build(bib, schema):
 
 
 def write_tree(tree, path):
-  # Python 3: no need to encode
-  path = path.encode('utf-8')
-  try:
-    os.makedirs(os.path.dirname(path))
-  except os.error:
-    pass
-# Python 3:
-#  os.makedirs(os.path.dirname(path), exist_ok=True)
+  os.makedirs(os.path.dirname(path), exist_ok=True)
   with open(path, 'wb') as f:
     tree.write(
       f,
@@ -552,9 +542,7 @@ def handle_entry_form(fstruct):
       fullpath = os.path.join(repo_for(username), localpath)
 
       # don't clobber existing entries
-# Python 3:
-#      if os.path.exists(fullpath):
-      if os.path.exists(fullpath.encode('utf-8')):
+      if os.path.exists(fullpath):
         raise FormError(fullpath + ' already exists')
 
       # validate the entry
