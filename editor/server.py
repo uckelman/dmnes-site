@@ -534,7 +534,7 @@ def handle_entry_form(fstruct):
 
       # strip leading and trailing whitespace from form input
       form = werkzeug.datastructures.MultiDict([
-        (k, v.strip()) for (k, v) in request.form.iteritems(multi=True)
+        (k, v.strip()) for (k, v) in request.form.items()
       ])
 
       username = session['username']
@@ -560,7 +560,7 @@ def handle_entry_form(fstruct):
 
       # retain some input values for next entry
       vals = werkzeug.datastructures.MultiDict([
-        (k, v) for (k, v) in form.iteritems(multi=True) if k in fstruct.keepers
+        (k, v) for (k, v) in form.items() if k in fstruct.keepers
       ])
 
     except FormError as e:
