@@ -211,7 +211,7 @@ def prefix_base(s, maxlen):
 
 
 def sanitize_filename(filename):
-  filename = unicodedata.normalize('NFKC', unicode(filename).lower())
+  filename = unicodedata.normalize('NFKC', filename.lower())
   if len(filename) > 255:
     raise RuntimeError('Evil path: ' + filename)
   for evil in os.pardir, os.sep, os.altsep:
@@ -551,7 +551,7 @@ def handle_entry_form(fstruct):
 # FIXME: these are not particularly helpful error messages
 # It would be better to highlight the offending field
       except (lxml.etree.DocumentInvalid, lxml.etree.XMLSyntaxError) as e:
-        raise FormError(unicode(e))
+        raise FormError(str(e))
 
       # write the entry and report that
       commit_to_git(username, localpath, tree)
