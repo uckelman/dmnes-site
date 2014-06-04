@@ -305,7 +305,10 @@ def vnf_build(vnf, schema):
         E.live('false')
       )
     ),
-    (element_raw_inner('nym', v) for v in vnf.getlist('nym') if v),
+    (
+      lxml.html.fromstring('<nym>{}</nym>'.format(v))
+        for v in vnf.getlist('nym') if v
+    ),
     (
       element('gen', vnf),
       element('case', vnf),
