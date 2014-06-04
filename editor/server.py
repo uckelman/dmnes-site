@@ -436,7 +436,7 @@ def conditional_response(key, func, username):
   RFC1123 = '%a, %d %b %Y %H:%M:%S GMT'
 
   try:
-    ims = request.headers[b'If-Modified-Since']
+    ims = request.headers['If-Modified-Since']
     mtime_remote = datetime.datetime.strptime(ims, RFC1123)
   except (KeyError, ValueError):
     mtime_remote = datetime.datetime(datetime.MINYEAR, 1, 1)
@@ -444,7 +444,7 @@ def conditional_response(key, func, username):
   if mtime_local > mtime_remote:
     lines = func(repo_for(username))
     response = Response('\n'.join(lines), mimetype='text/plain')
-    response.headers.add(b'Last-Modified', mtime_local.strftime(RFC1123))
+    response.headers.add('Last-Modified', mtime_local.strftime(RFC1123))
   else:
     response = Response(status=304)
 
