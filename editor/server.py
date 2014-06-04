@@ -265,7 +265,7 @@ def element_raw_inner(key, obj, skip_empty=True):
   if skip_empty and not val:
     return ''
 
-  return lxml.etree.fromstring('<{0}>{1}</{0}>'.format(key, val))
+  return lxml.html.fromstring('<{0}>{1}</{0}>'.format(key, val))
 
 
 def indent(node, depth):
@@ -331,7 +331,7 @@ def vnf_build(vnf, schema):
 def bib_build(bib, schema):
   root = E.bibl(
     element('key', bib),
-    lxml.etree.fromstring(bib['entry'])
+    lxml.html.fromstring(bib['entry'])
   )
 
   indent(root, 0)
