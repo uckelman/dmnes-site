@@ -12,6 +12,7 @@ import werkzeug.security
 from flask import Flask, Response, abort, flash, redirect, render_template, request, session, url_for
 
 import lxml
+import lxml.html
 from lxml.builder import E
 
 app = Flask(__name__)
@@ -277,7 +278,7 @@ def indent(node, depth):
 
 def cnf_build(cnf, schema):
   root = E.cnf(
-    element('nym', cnf),
+    element_raw_inner('nym', cnf),
     E.meta(
       E.live('false')
     ),
@@ -299,22 +300,22 @@ def vnf_build(vnf, schema):
   # this is odd because we don't know how many nyms there will be
   root = E.vnf(*tuple(itertools.chain(
     (
-      element('name', vnf),
+      element_raw_inner('name', vnf),
       E.meta(
         E.live('false')
       )
     ),
-    (E.nym(v) for v in vnf.getlist('nym') if v),
+    (element_raw_inner('nym', v) for v in vnf.getlist('nym') if v),
     (
       element('gen', vnf),
       element('case', vnf),
       E.dim('true' if 'dim' in vnf and vnf['dim'] == 'on' else 'false'),
-      element('lang', vnf),
+      element_raw_inner('lang', vnf),
       element_raw_inner('place', vnf),
-      element('date', vnf),
+      element_raw_inner('date', vnf),
       E.bibl(
         element('key', vnf),
-        element('loc', vnf)
+        element_raw_inner('loc', vnf)
       ),
       element_raw_inner('note', vnf)
     )
