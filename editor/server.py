@@ -345,7 +345,8 @@ def bib_build(bib, schema):
 
 
 def write_tree(tree, path):
-  os.makedirs(os.path.dirname(path).encode('utf-8'), exist_ok=True)
+  path = path.encode('utf-8')
+  os.makedirs(os.path.dirname(path), exist_ok=True)
   with open(path, 'wb') as f:
     tree.write(
       f,
