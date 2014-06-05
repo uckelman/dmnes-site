@@ -98,7 +98,7 @@ class SubprocessError(subprocess.CalledProcessError):
 
 def do_cmd(cwd, *args):
   with subprocess.Popen(
-    args,
+    (a.encode('utf-8') for a in args),
     cwd=cwd,
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT
@@ -116,7 +116,7 @@ def do_cmd(cwd, *args):
 
 def do_cmd_out(cwd, ok, *args):
   with subprocess.Popen(
-    args,
+    (a.encode('utf-8') for a in args),
     cwd=cwd,
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE
