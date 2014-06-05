@@ -345,7 +345,7 @@ def bib_build(bib, schema):
 
 
 def write_tree(tree, path):
-  os.makedirs(os.path.dirname(path), exist_ok=True)
+  os.makedirs(os.path.dirname(path).encode('utf-8'), exist_ok=True)
   with open(path, 'wb') as f:
     tree.write(
       f,
@@ -361,7 +361,7 @@ def repo_for(username):
 
 def prepare_git(username):
   upath = repo_for(username)
-  repo_exists = os.path.isdir(upath)
+  repo_exists = os.path.isdir(upath.encode('utf-8'))
 
   if not repo_exists:
     # set up local repo
@@ -546,7 +546,7 @@ def handle_entry_form(fstruct):
       fullpath = os.path.join(repo_for(username), localpath)
 
       # don't clobber existing entries
-      if os.path.exists(fullpath):
+      if os.path.exists(fullpath.encode('utf-8')):
         raise FormError(fullpath + ' already exists')
 
       # validate the entry
