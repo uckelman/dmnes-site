@@ -26,6 +26,14 @@ sed -i -e '/^#AVOID_DAILY_AUTOCOMMITS=1/{s/^#//}' /etc/etckeeper/etckeeper.conf
 sed -i -e '/^#AVOID_COMMIT_BEFORE_INSTALL=1/{s/^#//}' /etc/etckeeper/etckeeper.conf
 etckeeper commit 'Never autocommit with etckeeper.'
 
+# set up swap file
+dd if=/dev/zero of=/var/swap.img bs=1M count=1024
+chmod 600 /var/swap.img
+mkswap /var/swap.img
+swapon /var/swap.img
+echo '/var/swap.img    none    swap    sw    0    0' >>/etc/fstab
+etckeeper commit 'Enabled swap.'
+
 # set up a user account for me
 useradd uckelman
 etckeeper commit 'Added uckelman user account.' 
@@ -59,7 +67,11 @@ systemctl reload sshd.service
 etckeeper commit 'Disabled password login via ssh.'
 
 # remove crap we don't need
-yum remove -y irda-utils nfs-utils pcsc-lite rpcbind wpa_supplicant NetworkManager NetworkManager-glib ntfsprogs ntfs-3g ModemManager-glib fprintd mdadm PackageKit realmd pam_krb5 avahi-autoipd smartmontools firewalld ssmtp
+yum remove -y irda-utils nfs-utils pcsc-lite rpcbind wpa_supplicant NetworkManager NetworkManager-glib ntfsprogs ntfs-3g ModemManager-glib mdadm PackageKit realmd pam_krb5 avahi-autoipd smartmontools firewalld ssmtp
+
+yum remove -y fprintd
+authconfig --disablefingerprint --update
+etckeeper commit 'Disabled fingerprint auth.'
 
 # set up firewall
 yum install -y system-config-firewall-tui
@@ -73,7 +85,7 @@ systemctl enable psacct.service
 etckeeper commit 'Enabled psacct.'
 
 # install misc things
-yum install -y logwatch setroubleshoot-server
+yum install -y logwatch
 
 # install postfix
 yum install -y postfix postgrey
@@ -96,6 +108,11 @@ cp $FILES_SRC/etc/httpd/conf.d/* /etc/httpd/conf.d/
 systemctl enable httpd.service
 etckeeper commit 'Set up apache.'
 
+# turn on SELinux
+yum install -y setroubleshoot-server
+sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
+etckeeper commit 'Turned on SELinux.'
+
 # install packages needed by dmnes editor
 yum install -y python3-flask python3-lxml
 
@@ -107,6 +124,13 @@ chmod a+x /home/editor
 # TODO: copy editor files to /home/editor here
 
 chown -R editor.editor /home/editor
+
+# SELinux adjustments for the editor
+setsebool -P httpd_read_user_content 1
+setsebool -P httpd_can_network_connect 1
+setsebool -P httpd_execmem 1
+semanage fcontext -a -t httpd_user_rw_content_t '/home/editor/users(/.*)?'
+etckeeper commit 'SELinux adjustments for the editor.'
 
 # cleanup
 restorecon -r -v /etc
