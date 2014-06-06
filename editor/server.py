@@ -238,7 +238,11 @@ def cnf_path(cnf, depth):
 def vnf_path(vnf, depth):
   return build_prefix_path(
     app.config['VNF_DIR'],
-    '{}_{}_{}'.format(vnf['name'], vnf['date'], vnf['key']),
+    '{}_{}_{}'.format(
+      vnf['name'],
+      vnf['date'].replace('/','s'), # slashes are evil, use 's'
+      vnf['key']
+    ),
     depth
   )
 
