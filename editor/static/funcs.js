@@ -1,65 +1,116 @@
-function setDatalist(dlist, url) {
-  var lastmod = dlist.getAttribute('data-lastmod') || new Date(0).toUTCString();
+function lowerBound(list, first, last, value) {
+  var i, step, count = last - first;
+
+  while (count > 0) {
+    step = count >> 1;
+    i = first + step;
+    if (list[i] < value) {
+      first = ++i;
+      count -= step + 1;
+    }
+    else {
+      count = step;
+    }
+  }
+ 
+  return first;
+}
+
+function binarySearch(list, first, last, value) {
+  first = lowerBound(list, first, last, value);
+  return (first != last && value >= list[first]);
+}
+
+function getList(list, url) {
+  // try to load list from storage
+  var json = sessionStorage.getItem(list.id);
+  if (json) {
+    slist = JSON.parse(json);
+    list.lastmod = slist.lastmod;
+    list.data = slist.data;
+  }
 
   // get new list from url
   var http = new XMLHttpRequest;
   http.open('GET', url, false);
-  http.setRequestHeader('If-Modified-Since', lastmod);
+  http.setRequestHeader('If-Modified-Since', list.lastmod);
   http.send();
-  
+
   if (http.status != 304) {
-    // clear datalist on any response except 304 Not Modified
-    var c;
-    while ((c = dlist.firstChild)) {
-      dlist.removeChild(c);
-    }
+    // clear list on any response except 304 Not Modified
+    list.data = [];
   }
 
   if (http.status == 200) {
-    // insert new children into datalist
-    for (var line of http.responseText.split('\n')) {
-      var opt = document.createElement('option');
-      opt.setAttribute('value', line);
-      dlist.appendChild(opt);
-    }
-
-    // update the date of last modification
-    lastmod = http.getResponseHeader('Last-Modified');
-    dlist.setAttribute('data-lastmod', lastmod);
+    // set new data and update mtime
+    list.data = http.responseText.split('\n');
+    list.lastmod = http.getResponseHeader('Last-Modified');
+    // store the updated list
+    sessionStorage.setItem(list.id, JSON.stringify(list));
   }
 }
 
-function validateAgainstDatalist(value, dlist) {
-  for (var option of dlist.options) {
-    if (option.value == value) {
-      return true;
-    }
+function setDatalist(data, first, last, dlist) {
+  // set the new elements
+  var frag = document.createDocumentFragment();
+  for (var i = first; i < last; ++i) {
+    var opt = document.createElement('option');
+    opt.setAttribute('value', data[i]);
+    frag.appendChild(opt);
   }
-  return false;
+
+  dlist.appendChild(frag);
 }
 
-function setBibKeys(url) {
-  setDatalist(document.getElementById('key_list'), url);
+function nextPrefix(p) {
+  return p.substring(0, p.length-1) +
+    String.fromCodePoint(p[p.length-1].charCodeAt()+1);
+}
+
+function updateDatalist(data, input) {
+  var l, h;
+
+  if (input.value) {
+    l = lowerBound(data, 0, data.length, input.value);
+    h = lowerBound(data, l, data.length, nextPrefix(input.value));
+  }
+  else {
+    l = 0;
+    h = data.length;
+  }
+
+  var dlist = input.list;
+  var dlist_id = dlist.id;
+  var dlist_par = dlist.parentNode; 
+  dlist_par.removeChild(dlist);
+  input.setAttribute('list', null);
+
+  dlist = document.createElement('datalist');
+  setDatalist(data, l, h, dlist);
+
+  dlist_par.appendChild(dlist);
+  dlist.id = dlist_id;
+  input.setAttribute('list', dlist_id);
+}
+
+function updateBibKeys(input) {
+  updateDatalist(bibkeys.data, input);
 }
 
 function validateBibKey(input) {
-  var klist = document.getElementById('key_list');
-  var result = validateAgainstDatalist(input.value, klist);
+  var result = input.value ?
+    binarySearch(bibkeys.data, 0, bibkeys.data.length, input.value) : false;
   input.setCustomValidity(result ? '' : 'Unknown bib key.');
   return result;
 }
 
-function setNyms(url) {
-  setDatalist(document.getElementById('nym_list'), url);
+function updateNyms(input) {
+  updateDatalist(nyms.data, input);
 }
 
 function validateNym(input) {
-  var result = true;
-  if (input.value) {
-    nlist_id = input.getAttribute('list');
-    var nlist = document.getElementById(nlist_id);
-    result = validateAgainstDatalist(input.value, nlist);
-  }
+  var result = input.value ?
+    binarySearch(nyms.data, 0, nyms.data.length, input.value) : false;
   input.setCustomValidity(result ? '' : 'Unknown nym.');
   return result;
 }
@@ -72,11 +123,16 @@ function addNymInput(button) {
   var orig_nym = document.getElementById('nym_0');
   var copy_nym = orig_nym.cloneNode(false);
   copy_nym.setAttribute('id', copy_nym_id);
-  copy_nym.setAttribute('list', 'nym_list');
   copy_nym.value = '';
+
+  // make new datalist
+  var dlist = document.createElement('datalist');
+  dlist.setAttribute('id', copy_nym_id + '_list');
+  copy_nym.setAttribute('list', copy_nym_id + '_list');
 
   var td = document.createElement('td');
   td.appendChild(copy_nym);
+  td.appendChild(dlist);
 
   // move the button down a row
   var bi_row = button.parentNode.parentNode;

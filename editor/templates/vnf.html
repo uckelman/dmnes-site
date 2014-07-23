@@ -6,6 +6,18 @@
   <script src="{{ url_for('static', filename='funcs.js') }}" type="application/javascript"></script>
 
   <script language="javascript">
+    var nyms = {
+      id: 'nyms',
+      data: [],
+      lastmod: new Date(0).toUTCString()
+    };
+
+    var bibkeys = {
+      id: 'bibkeys',
+      data: [],
+      lastmod: new Date(0).toUTCString()
+    };
+
     window.onload = function() {
       {% if vals %}
         // fill in the form as directed, but keep it clearable
@@ -32,8 +44,8 @@
 
       // TODO: do these asynchronously
       // get the nyms and bib keys
-      setBibKeys('{{ url_for('bibkeys') }}');
-      setNyms('{{ url_for('nyms') }}');
+      getList(nyms, '{{ url_for('nyms') }}');
+      getList(bibkeys, '{{ url_for('bibkeys') }}');
     };
   </script>
 {% endblock %}
@@ -53,8 +65,8 @@
           <label for="nym">Nym</label>
         </th>
         <td>
-          <input id="nym_0" name="nym" type="text" list="nym_list" autocomplete="off" onfocus="setNyms('{{ url_for('nyms') }}');" onblur="validateNym(this);"/>
-          <datalist id="nym_list">
+          <input id="nym_0" name="nym" type="text" list="nym_0_list" autocomplete="off" oninput="updateNyms(this);" onblur="validateNym(this);"/>
+          <datalist id="nym_0_list">
           </datalist>
           <button id="add_nym" type="button" tabindex="-1" onclick="addNymInput(this);">+</button>
         </td>
@@ -125,7 +137,7 @@
           <label for="key">Source</label>
         </th>
         <td>
-          <input id="key" name="key" type="text" list="key_list" autocomplete="off" required onfocus="setBibKeys('{{ url_for('bibkeys') }}');" onblur="if (this.value) validateBibKey(this);"/>
+          <input id="key" name="key" type="text" list="key_list" autocomplete="off" required oninput="updateBibKeys(this);" onblur="if (this.value) validateBibKey(this);"/>
           <datalist id="key_list">
           </datalist>
           <label for="loc">@</label>
