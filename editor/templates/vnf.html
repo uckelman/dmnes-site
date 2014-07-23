@@ -41,7 +41,9 @@
           {% endfor %}
         {% endif %}
       {% endif %}
+    };
 
+    window.onfocus = function() {
       // TODO: do these asynchronously
       // get the nyms and bib keys
       getList(nyms, '{{ url_for('nyms') }}');
