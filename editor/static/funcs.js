@@ -12,7 +12,7 @@ function lowerBound(list, first, last, value) {
       count = step;
     }
   }
- 
+
   return first;
 }
 
@@ -81,15 +81,15 @@ function updateDatalist(data, input) {
 
   var dlist = input.list;
   var dlist_id = dlist.id;
-  var dlist_par = dlist.parentNode; 
+  var dlist_par = dlist.parentNode;
   dlist_par.removeChild(dlist);
   input.setAttribute('list', null);
 
   dlist = document.createElement('datalist');
+  dlist.id = dlist_id;
   setDatalist(data, l, h, dlist);
 
   dlist_par.appendChild(dlist);
-  dlist.id = dlist_id;
   input.setAttribute('list', dlist_id);
 }
 
