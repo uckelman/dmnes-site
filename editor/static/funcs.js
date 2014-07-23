@@ -110,7 +110,7 @@ function updateNyms(input) {
 
 function validateNym(input) {
   var result = input.value ?
-    binarySearch(nyms.data, 0, nyms.data.length, input.value) : false;
+    binarySearch(nyms.data, 0, nyms.data.length, input.value) : true;
   input.setCustomValidity(result ? '' : 'Unknown nym.');
   return result;
 }
