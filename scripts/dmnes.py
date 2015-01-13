@@ -16,7 +16,7 @@ def make_validating_parser(filename):
     doc = lxml.etree.parse(f)
 
   schema = lxml.etree.XMLSchema(doc)
-  return lxml.objectify.makeparser(schema=schema)
+  return lxml.objectify.makeparser(schema=schema, remove_blank_text=False)
 
 
 def parse_xml(parser, filename):
