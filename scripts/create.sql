@@ -1,4 +1,5 @@
 PRAGMA foreign_keys = ON;
+PRAGMA encoding = 'UTF-8';
 
 CREATE TABLE cnf(
   id INTEGER PRIMARY KEY,
@@ -23,6 +24,7 @@ CREATE TABLE vnf(
   "case" TEXT CHECK("case" IN ('n/a', 'abl', 'acc', 'dat', 'gen', 'nom', 'obl', 'unc')) NOT NULL,
   dim INTEGER CHECK(dim == 0 OR dim == 1) NOT NULL,
   lang TEXT CHECK(LENGTH(lang) > 0) NOT NULL,
+  area TEXT NOT NULL,
   place TEXT,
   date TEXT CHECK(LENGTH(date) > 0) NOT NULL,
   bib_id INTEGER NOT NULL REFERENCES bib(id),
