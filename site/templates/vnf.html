@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ vnf['name'] }} {{ vnf['date'] }}{% endblock %}
+{% block content %}
+<p>
+  <name>{{ vnf['name'] }}</name>
+  <gen>{{ vnf['gen'] }}</gen>
+  <case>{{ vnf['case'] }}<case>
+  <dim>{{ vnf['dim'] }}</dim>
+  <lang>{{ vnf['lang'] }}</lang>
+  {% if vnf['place'] %}
+  <place>{{ vnf['place']|safe }}</place>
+  {% endif %}
+  <date>{{ vnf['date'] }}</date>
+  <a href="{{ url_for('bib', key=vnf['key']) }}"><bibkey>{{ vnf['key'] }}</bibkey></a>
+  {% if vnf['bib_loc'] %}
+  <bibloc>{{ vnf['bib_loc'] }}</bibloc>
+  {% endif %}
+</p>
+{% if cnfs %}
+<p>↪
+  {% for cnf in cnfs %}
+    <a href="{{ url_for('cnf', nym=cnf['nym']) }}"><nym>{{ cnf['nym'] }}</nym></a>
+    {%- if not loop.last -%} {% endif -%}
+  {% endfor %}
+</p>
+{% endif %}
+{% endblock %}

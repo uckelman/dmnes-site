@@ -1,0 +1,26 @@
+body {
+  margin: 4ex auto;
+  max-width: 38em;
+  line-height: 1.5;
+
+  text-align: justify;
+  text-justify: inter-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+nym {
+  font-weight: bold;
+}
+
+name {
+  font-style: italic;
+}
+
+date {
+  /* FIXME: use old-style numerals! */
+}
+
+gen {
+  font-style: italic;
+}

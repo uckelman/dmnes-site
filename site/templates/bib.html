@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ bib['key'] }}{% endblock %}
+{% block content %}
+<dl>
+  <dt>{{ bib['key'] }}</dt>
+  <dd>{{ bib['data']|safe }}</dd>
+</dl>
+{% endblock %}
