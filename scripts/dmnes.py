@@ -1,14 +1,10 @@
+import itertools
 import lxml.etree
 import lxml.objectify
 
 
 def str_inner(node):
-  parts = (
-    [node.text] +
-    [lxml.etree.tostring(c, encoding='unicode') for c in node.getchildren()] +
-    [node.tail]
-  )
-  return ' '.join(''.join(filter(None, parts)).split())
+  return ''.join([node.text or ''] + list(lxml.etree.tostring(c, encoding='unicode') for c in node.getchildren()) + [node.tail or ''])
 
 
 def make_parser():
