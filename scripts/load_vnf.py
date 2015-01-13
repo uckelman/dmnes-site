@@ -5,6 +5,7 @@ import sys
 
 from dmnes import *
 
+
 def x_for_y(dbh, table, xcol, ycol, yval):
   dbh.execute(
     "SELECT {} FROM {} WHERE {} = ?".format(xcol, table, ycol),
@@ -22,6 +23,17 @@ def id_for_bib_key(dbh, key):
   return x_for_y(dbh, 'bib', 'id', 'key', key)
 
 
+def area_for_place(vnf):
+# TODO: handle # country != 1
+  if hasattr(vnf, 'place'):
+    if hasattr(vnf.place, 'country'):
+      return str(vnf.place.country)
+    if hasattr(vnf.place, 'region'):
+      return str(vnf.place.region)
+
+  return 'Unspecified'
+
+
 def make_vnf_row(dbh, vnf):
   return (
     str(vnf.name),
@@ -29,6 +41,7 @@ def make_vnf_row(dbh, vnf):
     str(vnf.case),
     int(vnf.dim),
     str(vnf.lang),
+    area_for_place(vnf),
     str_inner(vnf.place) if hasattr(vnf, 'place') else None,
     str(vnf.date),
     id_for_bib_key(dbh, str(vnf.bibl.key)),
@@ -39,7 +52,7 @@ def make_vnf_row(dbh, vnf):
 def insert_vnf(dbh, vnf):
   vnf_r = make_vnf_row(dbh, vnf)
   dbh.execute(
-    "INSERT INTO vnf (name, gen, 'case', dim, lang, place, date, bib_id, bib_loc) VALUES (?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO vnf (name, gen, 'case', dim, lang, area, place, date, bib_id, bib_loc) VALUES (?,?,?,?,?,?,?,?,?,?)",
     vnf_r
   )
   return dbh.lastrowid
