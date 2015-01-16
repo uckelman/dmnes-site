@@ -5,7 +5,7 @@ import sqlite3
 import sys
 import traceback
 
-from flask import Flask, g, render_template, request
+from flask import Flask, g, render_template, request, url_for
 
 
 app = Flask(__name__)
@@ -43,15 +43,6 @@ def slash():
   return 'Welcome to the DMNES!'
 
 
-def sortedtree(t):
-  if not hasattr(t, 'keys') or type(t) is sqlite3.Row:
-    return t
-
-  for k in t.keys():
-    t[k] = sortedtree(t[k])    
-  return tuple(sorted(t.items()))
-
-
 @app.route('/cnf', methods=['GET'])
 def cnf_list():
   c = get_db().cursor()
@@ -73,38 +64,55 @@ def cnf(nym):
 # TODO: handle no result
 
   # get VNFs
-  order = ('area', 'lang', 'dim', 'name', 'case', 'date', 'key', 'bib_loc')
+  order = ['area', 'lang', 'dim', 'date', 'name', 'case', 'key', 'bib_loc']
 
-  key_index = 6
-  prevcite = None 
+  # set the hierarchical order from the order query key
+  qorder = request.args.get('order')
+  if qorder:
+    x = []
+    for field in qorder.split(','):
+      order.remove(field)
+      x.append(field)
+    x += order
+    order = x
+
+  # determine key index, and whether key and loc are adjacent
+  key_loc_index = len(order)
+  for i in range(len(order)):
+    if order[i] == 'key':
+      key_index = i
+      if i != len(order)-1 and order[i+1] == 'bib_loc':
+        key_loc_index = i
+      break
+    if order[i] == 'bib_loc':
+      if i != len(order)-1 and order[i+1] == 'key':
+        key_index = i+1
+        key_loc_index = i
+        break
+
+  prevcite = None
 
   def ibid_func(v):
-    return '<key>' + ('ibid' if v == prevcite else v) + '</key>'
+    return '<bib_key>' + ('ibid.' if v == prevcite else v) + '</bib_key>'
 
-  funcs = (
-    lambda v: '<area>' + v + '</area>',
-    lambda v: '<lang>' + v + '</lang>',
-    lambda v: '<dim>' + ('◑' if v else '●') + '</dim>',
-    lambda v: '<name>' + v + '</name>',
-    lambda v: '(<case>' + v + '</case>)',
-    lambda v: '<date>' + v + '</date>',
-    ibid_func,
-    lambda v: '<bib_loc>' + v + '</bib_loc>'
-  )
+  funcs = {
+    'area'    : lambda v: '<area>' + v + '</area>',
+    'lang'    : lambda v: '<lang>' + v + '</lang>',
+    'dim'     : lambda v: '<dim>' + ('◑' if v else '●') + '</dim>',
+    'date'    : lambda v: '<date>' + v + '</date>',
+    'name'    : lambda v: '<name>' + v + '</name>',
+    'case'    : lambda v: '(<case>' + v + '</case>)' if v != 'n/a' else '',
+    'key'     : ibid_func,
+    'bib_loc' : lambda v: '<bib_loc>' + v + '</bib_loc>' if v else ''
+  }
 
-#  for vnf in c.execute('SELECT vnf.id, name, "case", dim, lang, area, date, key, bib_loc FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY ?,?,?,?,?,?,?', (cnf['id'],) + order):
-#  for vnf in c.execute('SELECT name, "case", dim, lang, area, date, key, bib_loc FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ?', (cnf['id'],)):
+  sqlcols = ', '.join('"{}"'.format(x) for x in order)
+  sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(sqlcols, sqlcols)
 
-  qorder = ', '.join('"{}"'.format(x) for x in order)
-  query = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(qorder, qorder)
-
-  tree = {}
-
-  vnfxml = ''
-
+  vnfxml = empty_vnfxml = '<dl>\n'
   prev = [False] * len(order)
 
-  for vnf in c.execute(query, (cnf['id'],)):
+  for vnf in c.execute(sql, (cnf['id'],)):
 # TODO: handle date sorting
 #    print(tuple(vnf[n] for n in range(len(vnf))), file=sys.stderr)
 
@@ -116,53 +124,60 @@ def cnf(nym):
         # close hierarchical parts
         if i <= 2:
           if prev[0]:
-            print((' ' * i) + '</dd>')
-            if i <= 1:
-              print((' ' * i) + '</dl>')
-              if i == 0:
-                print((' ' * i) + '</dd>')
+            vnfxml += '</dd>\n'
+            if i == 0:
+              vnfxml += '</dl>\n</dd>\n'
         # end top level of flat part with semicolon
         elif i == 3:
-          print((' ' * i) + ';')
+          vnfxml += ';\n'
         # end other entries of flat part with comma
-        elif i > 4:
-          print((' ' * i) + ',')
-         
+        else:
+          vnfxml += ',\n'
+
         # elements differing from previous entry
         for k in range(i, len(order)):
-
-          # open hierarchical parts
-          if k == 0:
-            print((' ' * k) + '<dt>')
-          elif k == 1:
-            print((' ' * k) + '<dt>')
-          elif k == 2:
-            print((' ' * k) + '<dd>')
-
           prev[k] = vnf[order[k]]
-          print((' ' * k) + funcs[k](prev[k]))
+          exml = funcs[order[k]](prev[k])
 
           # open hierarchical parts
           if k == 0:
-            print((' ' * k) + '</dt><dd><dl>')          
+            vnfxml += '<dt>'
           elif k == 1:
-            print((' ' * k) + '</dt>')
+            vnfxml += '<dt>'
+          elif k == 2:
+            vnfxml += '<dd>'
+          # spacing for flat parts
+          elif exml:
+            vnfxml += ' '
+
+          # open link for adjacent key and location
+          if k == key_loc_index:
+            vnfxml += '<a href="{}">'.format(
+              url_for(
+                'vnf', name=vnf['name'], date=vnf['date'], bibkey=vnf['key']
+              )
+            )
+
+          vnfxml += exml
+
+          # close link for adjacent key and location
+          if k == key_loc_index + 1:
+            vnfxml += '</a>'
+
+          # open hierarchical parts
+          if k == 0:
+            vnfxml += '</dt>\n<dd>\n<dl>\n'
+          elif k == 1:
+            vnfxml += '</dt>\n'
 
         break
 
-    # create tree from VNFs
+  if vnfxml != empty_vnfxml:
+    vnfxml += '</dd>\n</dl>\n</dd>\n</dl>'
+  else:
+    vnfxml = None
 
-    x = tree
-    for d in range(len(order)-1):
-      if vnf[order[d]] not in x:
-        x[vnf[order[d]]] = {}
-      x = x[vnf[order[d]]] 
-    x[vnf[order[len(order)-1]]] = True
-
-  print('</dd></dl></dd>')
-
-  tree = sortedtree(tree)
-  return render_template('cnf.html', cnf=cnf, vnfs=tree, order=order)
+  return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml)
 
 
 @app.route('/vnf/<name>/<date>/<bibkey>', methods=['GET'])

@@ -19,54 +19,8 @@
 </p>
   {% endif %}
 
-{% if vnfs %}
-<dl>
-{% for country, langs in vnfs %}
-  <dt>{{ country }}</dt>
-  <dd>
-    <dl>
-    {% for lang, dim in langs %}
-      <dt>{{ lang }}</dt>
-      {% if dim[0] %}
-        <dd>●
-        {% for name, recs in dim[0] -%}
-          <name>{{ name }}</name>
-          {% for r in recs -%}
-            {%- if loop.first -%}
-              {%- if r['case'] != 'n/a' -%}
-              (<case>{{ r['case'] }}</case>)
-              {% endif -%}
-            {% endif -%}
-            <a href="{{ url_for('vnf', name=r['name'], date=r['date'], bibkey=r['key']) }}"><date>{{ r['date'] }}</date> <bibkey>{{ r['key'] }}</bibkey>{% if r['bib_loc'] %} <bibloc>{{ r['bib_loc'] }}</bibloc>{% endif -%}</a>
-            {%- if not loop.last -%}, {% endif %}
-          {%- endfor %}
-          {%- if not loop.last -%}; {% endif -%}
-        {% endfor %}
-        </dd>
-      {% endif %}
-      {% if dim[1] %}
-        <dd>◑
-        {% for name, recs in dim[1] -%}
-          <name>{{ name }}</name>
-          {% for r in recs -%}
-            {%- if loop.first -%}
-              {%- if r['case'] != 'n/a' -%}
-              (<case>{{ r['case'] }}</case>)
-              {% endif -%}
-            {% endif -%}
-            <a href="{{ url_for('vnf', name=r['name'], date=r['date'], bibkey=r['key']) }}"><date>{{ r['date'] }}</date> <bibkey>{{ r['key'] }}</bibkey>{% if r['bib_loc'] %} <bibloc>{{ r['bib_loc'] }}</bibloc>{% endif -%}</a>
-            {%- if not loop.last -%}, {% endif %}
-          {%- endfor %}
-          {%- if not loop.last -%}; {% endif -%}
-        {% endfor %}
-        </dd>
-      {% endif %}
-    {% endfor %}
-    </dl>
-  </dd>
-{% endfor %}
-</dl>
+{% if vnfxml %}
+{{ vnfxml|safe }}
 {% endif %}
-
 
 {% endblock %}
