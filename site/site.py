@@ -44,11 +44,6 @@ def slash():
 
 
 def sortedtree(t):
-  if type(t) is list:
-    for i in range(0, len(t)):
-      t[i] = sortedtree(t[i])
-    return tuple(t)
-
   if not hasattr(t, 'keys') or type(t) is sqlite3.Row:
     return t
 
@@ -78,40 +73,96 @@ def cnf(nym):
 # TODO: handle no result
 
   # get VNFs
-  order = ('area', 'lang', 'dim', 'name', 'date', 'key', 'bib_loc')
+  order = ('area', 'lang', 'dim', 'name', 'case', 'date', 'key', 'bib_loc')
 
-  c.execute('SELECT vnf.id, name, "case", dim, lang, area, date, key, bib_loc FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY ?,?,?,?,?,?,?', (cnf['id'],) + order)
-  vnfs = c.fetchall()
+  key_index = 6
+  prevcite = None 
 
-  # create tree from VNFs
-  vnf_tree = {}
-  for vnf in vnfs:
-    # extract the country
+  def ibid_func(v):
+    return '<key>' + ('ibid' if v == prevcite else v) + '</key>'
+
+  funcs = (
+    lambda v: '<area>' + v + '</area>',
+    lambda v: '<lang>' + v + '</lang>',
+    lambda v: '<dim>' + ('◑' if v else '●') + '</dim>',
+    lambda v: '<name>' + v + '</name>',
+    lambda v: '(<case>' + v + '</case>)',
+    lambda v: '<date>' + v + '</date>',
+    ibid_func,
+    lambda v: '<bib_loc>' + v + '</bib_loc>'
+  )
+
+#  for vnf in c.execute('SELECT vnf.id, name, "case", dim, lang, area, date, key, bib_loc FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY ?,?,?,?,?,?,?', (cnf['id'],) + order):
+#  for vnf in c.execute('SELECT name, "case", dim, lang, area, date, key, bib_loc FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ?', (cnf['id'],)):
+
+  qorder = ', '.join('"{}"'.format(x) for x in order)
+  query = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(qorder, qorder)
+
+  tree = {}
+
+  vnfxml = ''
+
+  prev = [False] * len(order)
+
+  for vnf in c.execute(query, (cnf['id'],)):
 # TODO: handle date sorting
+#    print(tuple(vnf[n] for n in range(len(vnf))), file=sys.stderr)
 
-    area = vnf['area']
-    lang = vnf['lang']
-    name = vnf['name']
-    dim = vnf['dim']
+    for i in range(len(order)):
+      if prev[i] != vnf[order[i]]:
+        # ibid, but only within the flat part
+        prevcite = prev[key_index] if i > 2 else None
 
-    if area not in vnf_tree:
-      vnf_tree[area] = {}
+        # close hierarchical parts
+        if i <= 2:
+          if prev[0]:
+            print((' ' * i) + '</dd>')
+            if i <= 1:
+              print((' ' * i) + '</dl>')
+              if i == 0:
+                print((' ' * i) + '</dd>')
+        # end top level of flat part with semicolon
+        elif i == 3:
+          print((' ' * i) + ';')
+        # end other entries of flat part with comma
+        elif i > 4:
+          print((' ' * i) + ',')
+         
+        # elements differing from previous entry
+        for k in range(i, len(order)):
 
-    if lang not in vnf_tree[area]:
-      vnf_tree[area][lang] = [{}, {}]
+          # open hierarchical parts
+          if k == 0:
+            print((' ' * k) + '<dt>')
+          elif k == 1:
+            print((' ' * k) + '<dt>')
+          elif k == 2:
+            print((' ' * k) + '<dd>')
 
-    if name not in vnf_tree[area][lang][dim]:
-      vnf_tree[area][lang][dim][name] = []
+          prev[k] = vnf[order[k]]
+          print((' ' * k) + funcs[k](prev[k]))
 
-    vnf_tree[area][lang][dim][name].append(vnf)
+          # open hierarchical parts
+          if k == 0:
+            print((' ' * k) + '</dt><dd><dl>')          
+          elif k == 1:
+            print((' ' * k) + '</dt>')
 
-  vnf_tree = sortedtree(vnf_tree) 
-  return render_template('cnf.html', cnf=cnf, vnfs=vnf_tree)
+        break
 
+    # create tree from VNFs
 
-  
+    x = tree
+    for d in range(len(order)-1):
+      if vnf[order[d]] not in x:
+        x[vnf[order[d]]] = {}
+      x = x[vnf[order[d]]] 
+    x[vnf[order[len(order)-1]]] = True
 
+  print('</dd></dl></dd>')
 
+  tree = sortedtree(tree)
+  return render_template('cnf.html', cnf=cnf, vnfs=tree, order=order)
 
 
 @app.route('/vnf/<name>/<date>/<bibkey>', methods=['GET'])
