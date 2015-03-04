@@ -93,17 +93,17 @@ def cnf(nym):
   prevcite = None
 
   def ibid_func(v):
-    return '<bib_key>' + ('ibid.' if v == prevcite else v) + '</bib_key>'
+    return '<span class="bib_key">' + ('ibid.' if v == prevcite else v) + '</span>'
 
   funcs = {
-    'area'    : lambda v: '<area>' + v + '</area>',
-    'lang'    : lambda v: '<lang>' + v + '</lang>',
-    'dim'     : lambda v: '<dim>' + ('◑' if v else '●') + '</dim>',
-    'date'    : lambda v: '<date>' + v + '</date>',
-    'name'    : lambda v: '<name>' + v + '</name>',
-    'case'    : lambda v: '(<case>' + v + '</case>)' if v != 'n/a' else '',
+    'area'    : lambda v: '<span class="area">' + v + '</span>',
+    'lang'    : lambda v: '<span class="lang">' + v + '</span>',
+    'dim'     : lambda v: '<span class="dim">' + ('◑' if v else '●') + '</span>',
+    'date'    : lambda v: '<span class="date">' + v + '</span>',
+    'name'    : lambda v: '<span class="name">' + v + '</span>',
+    'case'    : lambda v: '(<span class="case">' + v + '</span>)' if v != 'n/a' else '',
     'key'     : ibid_func,
-    'bib_loc' : lambda v: '<bib_loc>' + v + '</bib_loc>' if v else ''
+    'bib_loc' : lambda v: '<span class="bib_loc">' + v + '</span>' if v else ''
   }
 
   sqlcols = ', '.join('"{}"'.format(x) for x in order)

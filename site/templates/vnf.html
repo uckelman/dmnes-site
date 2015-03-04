@@ -2,24 +2,24 @@
 {% block title %}{{ vnf['name'] }} {{ vnf['date'] }}{% endblock %}
 {% block content %}
 <p>
-  <name>{{ vnf['name'] }}</name>
-  <gen>{{ vnf['gen'] }}</gen>
-  <case>{{ vnf['case'] }}<case>
-  <dim>{{ vnf['dim'] }}</dim>
-  <lang>{{ vnf['lang'] }}</lang>
+  <span class="name">{{ vnf['name'] }}</span>
+  <span class="gen">{{ vnf['gen'] }}</span>
+  <span class="case">{{ vnf['case'] }}</span>
+  <span class="dim">{{ vnf['dim'] }}</span>
+  <span class="lang">{{ vnf['lang'] }}</span>
   {% if vnf['place'] %}
-  <place>{{ vnf['place']|safe }}</place>
+  <span class="place">{{ vnf['place']|safe }}</span>
   {% endif %}
-  <date>{{ vnf['date'] }}</date>
-  <a href="{{ url_for('bib', key=vnf['key']) }}"><bibkey>{{ vnf['key'] }}</bibkey></a>
+  <span class="date">{{ vnf['date'] }}</span>
+  <a href="{{ url_for('bib', key=vnf['key']) }}"><span class="bibkey">{{ vnf['key'] }}</span></a>
   {% if vnf['bib_loc'] %}
-  <bibloc>{{ vnf['bib_loc'] }}</bibloc>
+  <span class="bibloc">{{ vnf['bib_loc'] }}</span>
   {% endif %}
 </p>
 {% if cnfs %}
 <p>↪
   {% for cnf in cnfs %}
-    <a href="{{ url_for('cnf', nym=cnf['nym']) }}"><nym>{{ cnf['nym'] }}</nym></a>
+    <a href="{{ url_for('cnf', nym=cnf['nym']) }}"><span class="nym">{{ cnf['nym'] }}</span></a>
     {%- if not loop.last -%} {% endif -%}
   {% endfor %}
 </p>
