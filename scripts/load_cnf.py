@@ -1,6 +1,6 @@
 #!/usr/bin/python3 -b
 
-import lxml.etree;
+import lxml.etree
 import sqlite3
 import sys
 
@@ -43,7 +43,7 @@ def main():
     for filename in sys.argv[3:]:
       try:
         process_cnf(parser, dbh, filename)
-      except Exception as e:
+      except lxml.etree.XMLSyntaxError as e:
         print(filename, e, file=sys.stderr)
 
 
