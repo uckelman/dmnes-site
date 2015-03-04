@@ -1,5 +1,7 @@
 import lxml.etree
 import lxml.objectify
+import sqlite3
+import sys
 
 
 def make_db_handle(db):
@@ -9,7 +11,13 @@ def make_db_handle(db):
 
 
 def str_inner(node):
-  return ''.join([node.text or ''] + list(lxml.etree.tostring(c, encoding='unicode') for c in node.getchildren()) + [node.tail or ''])
+  return ''.join(
+    [node.text or ''] +
+    list(
+      lxml.etree.tostring(c, encoding='unicode') for c in node.getchildren()
+    ) +
+    [node.tail or '']
+  )
 
 
 def make_parser():
@@ -41,6 +49,19 @@ def insert_notes(dbh, table, ref, obj):
       "INSERT INTO {} (ref, note) VALUES (?,?)".format(table),
       note_rs
     )
+
+
+def xml_to_db(parser, process, dbpath, xmlpaths):
+  # connect to the database
+  with sqlite3.connect(dbpath) as db:
+    dbh = make_db_handle(db)
+
+    # process each XML file
+    for filename in xmlpaths:
+      try:
+        process(parser, dbh, filename)
+      except lxml.etree.XMLSyntaxError as e:
+        print(filename, e, file=sys.stderr)
 
 
 def make_span_xslt():

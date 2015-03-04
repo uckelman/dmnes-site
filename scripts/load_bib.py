@@ -1,7 +1,5 @@
 #!/usr/bin/python3 -b
 
-import lxml.etree
-import sqlite3
 import sys
 
 from dmnes import *
@@ -31,17 +29,7 @@ def process_bib(parser, dbh, filename):
 
 def main():
   parser = make_parser()
-
-  # connect to the database
-  with sqlite3.connect(sys.argv[1]) as db:
-    dbh = make_db_handle(db)
-
-    # process each bib file
-    for filename in sys.argv[2:]:
-      try:
-        process_bib(parser, dbh, filename)
-      except lxml.etree.XMLSyntaxError as e:
-        print(filename, e, file=sys.stderr)
+  xml_to_db(parser, process_bib, sys.argv[1], sys.argv[2:])
 
 
 if __name__ == '__main__':
