@@ -37,16 +37,15 @@ def main():
 
   # connect to the database
   with sqlite3.connect(sys.argv[1]) as db:
-    dbh = db.cursor()
-    dbh.execute("PRAGMA foreign_keys = ON")
+    dbh = make_db_handle(db)
 
     # process each CNF file
     for filename in sys.argv[3:]:
       try:
         process_cnf(parser, dbh, filename)
-      except:
-        print(filename, file=sys.stderr)
-        raise
+      except Exception as e:
+        print(filename, e, file=sys.stderr)
+
 
 if __name__ == '__main__':
   main()
