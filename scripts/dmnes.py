@@ -1,4 +1,3 @@
-import itertools
 import lxml.etree
 import lxml.objectify
 
