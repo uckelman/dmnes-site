@@ -24,15 +24,17 @@ def insert_cnf(dbh, cnf):
   return dbh.lastrowid
 
 
-def process_cnf(parser, dbh, filename):
+def process_cnf(parser, trans, dbh, filename):
   cnf = parse_xml(parser, filename)
-  cnf_id = insert_cnf(dbh, cnf)
-  insert_notes(dbh, "cnf_notes", cnf_id, cnf)
+  spanned_cnf = trans(cnf).getroot()
+  cnf_id = insert_cnf(dbh, spanned_cnf)
+  insert_notes(dbh, "cnf_notes", cnf_id, spanned_cnf)
 
 
 def main():
-  parser = make_validating_parser(sys.argv[2]) 
-  xml_to_db(parser, process_cnf, sys.argv[1], sys.argv[3:])
+  parser = make_validating_parser(sys.argv[2])
+  trans = make_xslt(sys.argv[3])
+  xml_to_db(parser, trans, process_cnf, sys.argv[1], sys.argv[4:])
 
 
 if __name__ == '__main__':
