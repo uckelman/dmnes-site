@@ -20,8 +20,8 @@ app.config.from_object(__name__)
 
 app.config.update(dict(
 #  REPO_URL='git@github.com:SaraUckelman/dmnes.git',
-  REPO_URL='git@github.com:uckelman/test.git',
-#  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
+#  REPO_URL='git@github.com:uckelman/test.git',
+  REPO_URL='file:///home/uckelman/projects/dmnes/dmnes',
   USERS_DIR='users',
   CNF_DIR='CNFs',
   VNF_DIR='VNFs',
@@ -114,6 +114,7 @@ def do_cmd(cwd, *args):
   return '% {}\n{}'.format(' '.join(args), out)
 
 
+# FIXME: need to catch TimeoutExpired
 def do_cmd_out(cwd, ok, *args):
   with subprocess.Popen(
     (a.encode('utf-8') for a in args),
