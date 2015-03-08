@@ -52,7 +52,7 @@ def strip_marks(s):
 
 
 @app.route('/cnf', methods=['GET'])
-def cnf_list():
+def cnf_index():
   c = get_db().cursor()
 
   # get CNF
@@ -73,7 +73,7 @@ def cnf_list():
   for _, nl in index:
     nl.sort(key=strip_marks)
 
-  return render_template('cnf_list.html', index=index)
+  return render_template('cnf_index.html', index=index)
 
 
 class NymNotFoundError(RuntimeError):
