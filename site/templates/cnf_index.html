@@ -3,11 +3,11 @@
 {% block content %}
 
 {% macro index_nav(index) %}
-<div class="index_nav">
+<nav class="index_nav">
 {% for i in index %}
   <a href="#{{ i[0] }}">{{ i[0] }}</a>{% if not loop.last %} ·{% endif %}
 {% endfor %}
-</div>
+</nav>
 {% endmacro %}
 
 {{ index_nav(index) }}
