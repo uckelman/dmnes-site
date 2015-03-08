@@ -4,6 +4,7 @@ import os
 import sqlite3
 import sys
 import traceback
+import unicodedata
 
 from flask import Flask, g, render_template, request, url_for
 
@@ -43,6 +44,13 @@ def slash():
   return 'Welcome to the DMNES!'
 
 
+def strip_marks(s):
+  return ''.join(
+    c for c in unicodedata.normalize('NFKD', s)
+    if unicodedata.category(c)[0] != 'M'
+  )
+
+
 @app.route('/cnf', methods=['GET'])
 def cnf_list():
   c = get_db().cursor()
@@ -51,7 +59,25 @@ def cnf_list():
   c.execute('SELECT nym FROM cnf')
   nyms = c.fetchall()
 
-  return render_template('cnf_list.html', nyms=nyms)
+  # index by initial letter
+  index = {}
+  for nym in nyms:
+    n = nym['nym']
+    f = unicodedata.normalize('NFKD', n[0])[0]
+    if f not in index:
+      index[f] = []
+    index[f].append(n)
+  index = sorted(index.items())
+
+  # sort each letter by nym, stripped of diacritical marks
+  for _, nl in index:
+    nl.sort(key=strip_marks)
+
+  return render_template('cnf_list.html', index=index)
+
+
+class NymNotFoundError(RuntimeError):
+  pass
 
 
 @app.route('/cnf/<nym>', methods=['GET'])
@@ -61,7 +87,10 @@ def cnf(nym):
   # get CNF
   c.execute('SELECT * FROM cnf WHERE nym = ? COLLATE NOCASE LIMIT 1', (nym,))
   cnf = c.fetchone()
-# TODO: handle no result
+
+# TODO: catch NymNotFound and display custom message
+  if cnf is None:
+    raise NymNotFoundError("nym '{}' not found".format(nym))
 
   # get VNFs
   order = ['area', 'lang', 'dim', 'date', 'name', 'case', 'key', 'bib_loc']
@@ -179,7 +208,7 @@ def cnf(nym):
 
   return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml)
 
-
+# TODO: add error handling for bad name, date, bibkey
 @app.route('/vnf/<name>/<date>/<bibkey>', methods=['GET'])
 def vnf(name, date, bibkey):
   c = get_db().cursor()
@@ -195,6 +224,7 @@ def vnf(name, date, bibkey):
   return render_template('vnf.html', vnf=vnf, cnfs=cnfs)
 
 
+# TODO: add error handling for bad bibkey
 @app.route('/bib/<key>', methods=['GET'])
 def bib(key):
   c = get_db().cursor()
