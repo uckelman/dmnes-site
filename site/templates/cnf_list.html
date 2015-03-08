@@ -2,8 +2,25 @@
 {% block title %}{{ CNFs }}{% endblock %}
 {% block content %}
 
-{% for nym in nyms %}
-<a href="{{ url_for('cnf', nym=nym['nym']) }}">{{ nym['nym'] }}</a>
+{% macro index_nav(index) %}
+<div class="index_nav">
+{% for i in index %}
+  <a href="#{{ i[0] }}">{{ i[0] }}</a>{% if not loop.last %} ·{% endif %}
+{% endfor %}
+</div>
+{% endmacro %}
+
+{{ index_nav(index) }}
+<div class="aldus">☙</div>
+
+{% for i in index %}
+<p class="index_letter"><a name="{{ i[0] }}">{{ i[0] }}</a>
+  {% for nym in i[1] %}
+<a href="{{ url_for('cnf', nym=nym) }}">{{ nym }}</a>
+  {% endfor %}
+</p>
 {% endfor %}
 
+<div class="aldus">❧</div>
+{{ index_nav(index) }}
 {% endblock %}
