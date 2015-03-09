@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block nav %}
-  <nav>
-    <span><a href="{{ url_for('logout') }}">Logout</a></span>
-    <span>{% if request.endpoint != 'cnf' %}<a href="{{ url_for('cnf') }}">CNF</a>{% else %}CNF{% endif %}</span>
-    <span>{% if request.endpoint != 'vnf' %}<a href="{{ url_for('vnf') }}">VNF</a>{% else %}VNF{% endif %}</span>
-    <span>{% if request.endpoint != 'bib' %}<a href="{{ url_for('bib') }}">Bib</a>{% else %}Bib{% endif %}</span>
-  </nav>
-{% endblock %}
