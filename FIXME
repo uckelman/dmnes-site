@@ -1,0 +1,15 @@
+use real quotes
+use real endashes, emdashes
+sort order may be different from lexical order:
+  The Netherlands
+  Language variants (Old French, French, e.g.)
+  dates
+editor: check that the freeform elements are well-formed
+
+
+
+ensure that we provide all fonts used
+
+  sfnt2woff font.ttf
+  mkeot font.ttf >font.eot
+  woff2sfnt font.woff >font.ttf
