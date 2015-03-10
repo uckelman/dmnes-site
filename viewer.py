@@ -22,6 +22,10 @@ app.config.update(dict(
 
 def connect_db():
   db = sqlite3.connect(app.config['DB_PATH'])
+# FIXME: Python 3.4
+#  db = sqlite3.connect(
+#    'file:/%s?mode=ro'.format(app.config['DB_PATH']), uri=True
+#  )
   db.row_factory = sqlite3.Row
   return db
 
