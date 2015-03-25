@@ -140,8 +140,9 @@ def cnf(nym):
     'bib_loc' : lambda v: '<span class="bib_loc">' + v + '</span>' if v else ''
   }
 
-  sqlcols = ', '.join('"{}"'.format(x) for x in order)
-  sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(sqlcols, sqlcols)
+  selectcols = ', '.join('"{}"'.format(x) for x in order)
+  sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey')
+  sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(selectcols, sortcols)
 
   vnfxml = empty_vnfxml = '<dl>\n'
   prev = [False] * len(order)

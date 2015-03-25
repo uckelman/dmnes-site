@@ -1,15 +1,23 @@
 use real quotes
 use real endashes, emdashes
 sort order may be different from lexical order:
-  The Netherlands
-  Language variants (Old French, French, e.g.)
   dates
 editor: check that the freeform elements are well-formed
 
-
+max-width doesn't scale properly with font size (why not?)
 
 ensure that we provide all fonts used
 
   sfnt2woff font.ttf
   mkeot font.ttf >font.eot
   woff2sfnt font.woff >font.ttf
+
+finish data display for VNFs
+finish data display for bibs
+caching
+
+add headroom for anchors on CNF index page
+
+get SELinux file contexts right (also for editor)
+
+how-to-cite footer
