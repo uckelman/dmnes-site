@@ -89,6 +89,11 @@ p.index_letter:first-letter {
   margin: 0.055em 7.5pt 0 0;
 }
 
+a.letter_anchor {
+  position: relative;
+  top: -1em;
+}
+
 // p.index::first-letter { initial-letter: 2 2; }
 
 .aldus {

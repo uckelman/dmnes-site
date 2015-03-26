@@ -14,7 +14,7 @@
 <div class="aldus">☙</div>
 
 {% for i in index %}
-<p class="index_letter"><a name="{{ i[0] }}">{{ i[0] }}</a>
+<p class="index_letter"><a class="letter_anchor" name="{{ i[0] }}"/>{{ i[0] }}
   {% for nym in i[1] %}
 <a href="{{ url_for('cnf', nym=nym) }}">{{ nym }}</a>
   {% endfor %}
