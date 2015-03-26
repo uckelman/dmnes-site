@@ -56,7 +56,7 @@ def strip_marks(s):
   )
 
 
-@app.route('/cnf', methods=['GET'])
+@app.route('/cnfs', methods=['GET'])
 def cnf_index():
   c = get_db().cursor()
 
