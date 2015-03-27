@@ -8,13 +8,13 @@ import unicodedata
 
 from flask import Flask, g, render_template, request, url_for
 
-basedir = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
-  DB_PATH=os.path.join(basedir, 'dmnes.sqlite'),
+  DB_PATH=os.path.join(BASE_DIR, 'dmnes.sqlite'),
   SECRET_KEY=os.urandom(128),
   DEBUG=True
 ))
