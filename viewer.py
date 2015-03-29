@@ -1,12 +1,16 @@
 #!/usr/bin/python3 -b
 
+import functools
 import os
 import sqlite3
 import sys
 import traceback
 import unicodedata
 
-from flask import Flask, g, render_template, request, url_for
+from flask import Flask, flash, g, redirect, render_template, request, session, url_for
+
+from auth import auth_user
+
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,7 +48,43 @@ def close_db(exception):
     db.close()
 
 
+def login_required(f):
+  @functools.wraps(f)
+  def decorated_function(*args, **kwargs):
+    if 'username' not in session:
+      return redirect(url_for('login', next=request.url))
+    return f(*args, **kwargs)
+
+  return decorated_function
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  if request.method == 'POST':
+    username = request.form['username']
+    password = request.form['password']
+
+    if auth_user(username, password):
+      session['username'] = username
+      flash('Welcome, ' + username + '.', 'notice')
+      return redirect(request.args.get('next') or url_for('cnf_index'))
+    else:
+      flash('Invalid username or password!', 'error')
+
+  return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+  username = session.pop('username', None)
+  if username:
+    flash('Goodbye, ' + username + '.', 'notice')
+  return redirect(url_for('login'))
+
+
 @app.route('/')
+@login_required
 def slash():
   return 'Welcome to the DMNES!'
 
@@ -57,6 +97,7 @@ def strip_marks(s):
 
 
 @app.route('/cnfs', methods=['GET'])
+@login_required
 def cnf_index():
   c = get_db().cursor()
 
@@ -86,6 +127,7 @@ class NymNotFoundError(RuntimeError):
 
 
 @app.route('/cnf/<nym>', methods=['GET'])
+@login_required
 def cnf(nym):
   c = get_db().cursor()
 
@@ -214,8 +256,10 @@ def cnf(nym):
 
   return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml)
 
+
 # TODO: add error handling for bad name, date, bibkey
 @app.route('/vnf/<name>/<date>/<bibkey>', methods=['GET'])
+@login_required
 def vnf(name, date, bibkey):
   c = get_db().cursor()
 
@@ -232,6 +276,7 @@ def vnf(name, date, bibkey):
 
 # TODO: add error handling for bad bibkey
 @app.route('/bib/<key>', methods=['GET'])
+@login_required
 def bib(key):
   c = get_db().cursor()
 
