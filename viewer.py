@@ -9,7 +9,7 @@ import unicodedata
 
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 
-from auth import User, login_required
+from auth import User, handle_login, handle_logout, login_required
 
 
 def default_config():
@@ -49,34 +49,15 @@ def close_db(exception):
     db.close()
 
 
-def auth_user(username, password):
-  user = app.config['USERS'].get(username, None)
-  return user and user.check_password(password)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  if request.method == 'POST':
-    username = request.form['username']
-    password = request.form['password']
-
-    if auth_user(username, password):
-      session['username'] = username
-      flash('Welcome, ' + username + '.', 'notice')
-      return redirect(request.args.get('next') or url_for('cnf_index'))
-    else:
-      flash('Invalid username or password!', 'error')
-
-  return render_template('login.html')
+  return handle_login(app, lambda x: None, 'cnf_index')
 
 
 @app.route('/logout')
 @login_required
 def logout():
-  username = session.pop('username', None)
-  if username:
-    flash('Goodbye, ' + username + '.', 'notice')
-  return redirect(url_for('login'))
+  return handle_logout(lambda x: None)
 
 
 @app.route('/')
