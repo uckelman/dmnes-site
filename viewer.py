@@ -6,7 +6,7 @@ import sys
 import traceback
 import unicodedata
 
-from flask import Flask, flash, g, redirect, render_template, request, session, url_for
+from flask import Flask, flash, g, redirect, render_template, request, url_for
 
 from auth import User, handle_login, handle_logout, login_required
 
