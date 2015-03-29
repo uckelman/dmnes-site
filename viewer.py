@@ -9,19 +9,20 @@ import unicodedata
 
 from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 
-from auth import auth_user
+from auth import User, login_required
 
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+def default_config():
+  return dict(
+    SECRET_KEY=os.urandom(128),
+    DEBUG=False
+  )
+
 
 app = Flask(__name__)
-app.config.from_object(__name__)
-
-app.config.update(dict(
-  DB_PATH=os.path.join(BASE_DIR, 'dmnes.sqlite'),
-  SECRET_KEY=os.urandom(128),
-  DEBUG=True
-))
+app.config.update(default_config())
+app.config.from_pyfile('config.py')
+app.config['USERS'] = { x[0]: User(*x) for x in app.config['USERS'] }
 
 
 def connect_db():
@@ -48,14 +49,9 @@ def close_db(exception):
     db.close()
 
 
-def login_required(f):
-  @functools.wraps(f)
-  def decorated_function(*args, **kwargs):
-    if 'username' not in session:
-      return redirect(url_for('login', next=request.url))
-    return f(*args, **kwargs)
-
-  return decorated_function
+def auth_user(username, password):
+  user = app.config['USERS'].get(username, None)
+  return user and user.check_password(password)
 
 
 @app.route('/login', methods=['GET', 'POST'])

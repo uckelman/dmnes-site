@@ -1,0 +1,13 @@
+import os.path
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+DB_PATH=os.path.join(BASE_DIR, 'dmnes.sqlite')
+
+USERS = (
+  (
+    'jsmith', # pw: foo
+    'pbkdf2:sha1:1000$wRFvgaHp$0c5716c50f66eda4495ffb48b02a5ff12c78ed04',
+    'John Smith',
+    'jsmith@example.com'
+  )
+)
