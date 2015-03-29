@@ -1,6 +1,5 @@
 #!/usr/bin/python3 -b
 
-import functools
 import os
 import sqlite3
 import sys
@@ -51,7 +50,7 @@ def close_db(exception):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  return handle_login(app, lambda x: None, 'cnf_index')
+  return handle_login(lambda x: None, 'cnf_index')
 
 
 @app.route('/logout')
