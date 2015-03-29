@@ -35,10 +35,3 @@ accounts = { x[0]: User(*x) for x in users.accounts }
 def auth_user(username, password):
   user = accounts.get(username, None)
   return user and user.check_password(password)
-
-
-def auth_check():
-  try:
-    return session['username']
-  except KeyError:
-    abort(401)
