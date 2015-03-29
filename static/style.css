@@ -46,6 +46,10 @@ body {
   font-style: italic;
 }
 
+.dim {
+  font-size: 0.875em;
+}
+
 a {
   color: black;
   text-decoration: none;
