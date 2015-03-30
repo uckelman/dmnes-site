@@ -100,6 +100,15 @@ class NymNotFoundError(RuntimeError):
   pass
 
 
+def get_authors(table, id):
+  c = get_db().cursor()
+  c.execute('SELECT authors.skey, authors.prenames_short, authors.surname FROM {0} INNER JOIN authors ON {0}.author = authors.id WHERE {0}.ref=?'.format(table), (id,))
+  return set(
+    (r['skey'], '{} {}'.format(r['prenames_short'], r['surname']))
+    for r in c.fetchall()
+  )
+
+
 @app.route('/cnf/<nym>', methods=['GET'])
 @login_required
 def cnf(nym):
@@ -112,6 +121,8 @@ def cnf(nym):
 # TODO: catch NymNotFound and display custom message
   if cnf is None:
     raise NymNotFoundError("nym '{}' not found".format(nym))
+
+  authors = get_authors('cnf_authors', cnf['id'])
 
   # get VNFs
   order = ['area', 'lang', 'dim', 'date', 'name', 'case', 'key', 'bib_loc']
@@ -156,7 +167,7 @@ def cnf(nym):
     'bib_loc' : lambda v: '<span class="bib_loc">' + v + '</span>' if v else ''
   }
 
-  selectcols = ', '.join('"{}"'.format(x) for x in order)
+  selectcols = ', '.join(list('"{}"'.format(x) for x in order) + ['vnf.id'])
   sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey')
   sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(selectcols, sortcols)
 
@@ -164,6 +175,8 @@ def cnf(nym):
   prev = [False] * len(order)
 
   for vnf in c.execute(sql, (cnf['id'],)):
+    authors |= get_authors('vnf_authors', vnf['id'])
+
 # TODO: handle date sorting
 #    print(tuple(vnf[n] for n in range(len(vnf))), file=sys.stderr)
 
@@ -228,7 +241,9 @@ def cnf(nym):
   else:
     vnfxml = None
 
-  return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml)
+  authors = ', '.join(a[1] for a in sorted(authors))
+
+  return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml, authors=authors)
 
 
 # TODO: add error handling for bad name, date, bibkey

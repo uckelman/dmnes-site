@@ -104,3 +104,12 @@ a.letter_anchor {
   text-align: center;
   margin: 1em auto;
 }
+
+.citeme {
+  font-size: 0.8em;
+  border-top: 1pt solid;
+}
+
+.citeme > cite {
+  font-style: normal;
+}
