@@ -3,9 +3,11 @@ use real endashes, emdashes
 
 sort order may be different from lexical order:
   dates
+  author names
 
 max-width doesn't scale properly with font size (why not?)
 
+ensure that non-WOFF fonts are gzipped on output by Apache
 ensure that we provide all fonts used
 
   sfnt2woff font.ttf
