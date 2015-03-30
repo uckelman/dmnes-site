@@ -86,9 +86,7 @@ def cnf_index():
   for nym in nyms:
     n = nym['nym']
     f = unicodedata.normalize('NFKD', n[0])[0]
-    if f not in index:
-      index[f] = []
-    index[f].append(n)
+    index.setdefault(f, []).append(n)
   index = sorted(index.items())
 
   # sort each letter by nym, stripped of diacritical marks
