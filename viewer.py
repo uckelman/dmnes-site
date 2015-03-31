@@ -170,7 +170,7 @@ def cnf(nym):
   sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey')
   sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(selectcols, sortcols)
 
-  vnfxml = empty_vnfxml = '<dl>\n'
+  vnfhtml = empty_vnfhtml = '<dl>\n'
   prev = [False] * len(order)
 
   for vnf in c.execute(sql, (cnf['id'],)):
@@ -187,15 +187,15 @@ def cnf(nym):
         # close hierarchical parts
         if i <= 2:
           if prev[0]:
-            vnfxml += '</dd>\n'
+            vnfhtml += '</dd>\n'
             if i == 0:
-              vnfxml += '</dl>\n</dd>\n'
+              vnfhtml += '</dl>\n</dd>\n'
         # end top level of flat part with semicolon
         elif i == 3:
-          vnfxml += ';\n'
+          vnfhtml += ';\n'
         # end other entries of flat part with comma
         else:
-          vnfxml += ',\n'
+          vnfhtml += ',\n'
 
         # elements differing from previous entry
         for k in range(i, len(order)):
@@ -204,45 +204,53 @@ def cnf(nym):
 
           # open hierarchical parts
           if k == 0:
-            vnfxml += '<dt>'
+            vnfhtml += '<dt>'
           elif k == 1:
-            vnfxml += '<dt>'
+            vnfhtml += '<dt>'
           elif k == 2:
-            vnfxml += '<dd>'
+            vnfhtml += '<dd>'
           # spacing for flat parts
           elif exml:
-            vnfxml += ' '
+            vnfhtml += ' '
 
           # open link for adjacent key and location
           if k == key_loc_index:
-            vnfxml += '<a href="{}">'.format(
+            vnfhtml += '<a href="{}">'.format(
               url_for(
                 'vnf', name=vnf['name'], date=vnf['date'], bibkey=vnf['key']
               )
             )
 
-          vnfxml += exml
+          vnfhtml += exml
 
           # close link for adjacent key and location
           if k == key_loc_index + 1:
-            vnfxml += '</a>'
+            vnfhtml += '</a>'
 
           # open hierarchical parts
           if k == 0:
-            vnfxml += '</dt>\n<dd>\n<dl>\n'
+            vnfhtml += '</dt>\n<dd>\n<dl>\n'
           elif k == 1:
-            vnfxml += '</dt>\n'
+            vnfhtml += '</dt>\n'
 
         break
 
-  if vnfxml != empty_vnfxml:
-    vnfxml += '</dd>\n</dl>\n</dd>\n</dl>'
+  if vnfhtml != empty_vnfhtml:
+    vnfhtml += '</dd>\n</dl>\n</dd>\n</dl>'
   else:
-    vnfxml = None
+    vnfhtml = None
 
   authors = ', '.join(a[1] for a in sorted(authors))
 
-  return render_template('cnf.html', cnf=cnf, vnfxml=vnfxml, authors=authors)
+  return render_template(
+    'cnf.html',
+    cnf=cnf,
+    vnfhtml=vnfhtml,
+    authors=authors,
+    year=app.config['EDITION_YEAR'],
+    number=app.config['EDITION_NUMBER'],
+    preview=app.config['PREVIEW']
+  )
 
 
 # TODO: add error handling for bad name, date, bibkey

@@ -3,7 +3,6 @@ use real endashes, emdashes
 
 sort order may be different from lexical order:
   dates
-  author names
 
 max-width doesn't scale properly with font size (why not?)
 
@@ -19,7 +18,5 @@ finish data display for bibs
 caching
 
 get SELinux file contexts right (also for editor)
-
-add editors' names to how-to-cite footer
 
 check that SQL is efficient, we have the right indices
