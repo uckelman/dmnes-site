@@ -2,11 +2,10 @@
 
 import os
 import sqlite3
-import sys
 import traceback
 import unicodedata
 
-from flask import Flask, flash, g, redirect, render_template, request, url_for
+from flask import Flask, g, render_template, request, url_for
 
 from auth import User, handle_login, handle_logout, login_required
 
