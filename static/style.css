@@ -108,6 +108,7 @@ a.letter_anchor {
 .citeme {
   font-size: 0.8em;
   border-top: 1pt solid;
+  padding-top: 0.5em;
 }
 
 .citeme > cite {
