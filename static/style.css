@@ -68,11 +68,11 @@ a:hover, a:focus {
   -o-font-feature-settings: "smcp";
   -webkit-font-feature-settings: "smcp";
 */
-//  font-style: italic;
+/*  font-style: italic; */
 }
 
 dd {
-//  margin-left: 1.5em;
+/*  margin-left: 1.5em; */
 }
 
 .index_nav {
