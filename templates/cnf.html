@@ -23,6 +23,6 @@
 {{ vnfhtml|safe }}
 {% endif %}
 
-<p class="citeme">{%if preview %}Preview. <b>DO NOT</b> cite{% else %}Cite{% endif %} as: <cite>{{ authors }}. "{{ cnf['nym'] }}". In S.L. Uckelman <i>et al.</i>, eds. <i>The Dictionary of Medieval Names from European Sources</i>, Edition {{ year }} No. {{ number }}. {{ request.url }}.</cite></p>
+<p class="citeme">{%if preview %}Preview. <b>DO NOT</b> cite{% else %}Cite{% endif %} as: <cite>{{ authors }}. "{{ cnf['nym'] }}". In S.L. Uckelman, ed. <i>The Dictionary of Medieval Names from European Sources</i>, Edition {{ year }}, no. {{ number }}. http://www.dmnes.org/cnf/{{ year }}/{{ number }}/{{ cnf['nym'] }}.</cite></p>
 
 {% endblock %}
