@@ -167,7 +167,7 @@ def cnf(nym):
   }
 
   selectcols = ', '.join(list('"{}"'.format(x) for x in order) + ['vnf.id'])
-  sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey').replace('date', 'date_skey')
+  sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey', 1).replace('date', 'date_skey', 1)
   sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(selectcols, sortcols)
 
   vnfhtml = empty_vnfhtml = '<dl>\n'
