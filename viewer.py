@@ -199,7 +199,7 @@ def cnf(nym):
         # elements differing from previous entry
         for k in range(i, len(order)):
           prev[k] = vnf[order[k]]
-          exml = funcs[order[k]](prev[k])
+          ehtml = funcs[order[k]](prev[k])
 
           # open hierarchical parts
           if k == 0:
@@ -209,7 +209,7 @@ def cnf(nym):
           elif k == 2:
             vnfhtml += '<dd>'
           # spacing for flat parts
-          elif exml:
+          elif ehtml:
             vnfhtml += ' '
 
           # open link for adjacent key and location
@@ -220,7 +220,7 @@ def cnf(nym):
               )
             )
 
-          vnfhtml += exml
+          vnfhtml += ehtml
 
           # close link for adjacent key and location
           if k == key_loc_index + 1:
