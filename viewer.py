@@ -71,7 +71,7 @@ def strip_marks(s):
   )
 
 
-@app.route('/cnfs', methods=['GET'])
+@app.route('/names', methods=['GET'])
 @login_required
 def cnf_index():
   c = get_db().cursor()
@@ -108,7 +108,7 @@ def get_authors(table, id):
   )
 
 
-@app.route('/cnf/<nym>', methods=['GET'])
+@app.route('/name/<nym>', methods=['GET'])
 @login_required
 def cnf(nym):
   c = get_db().cursor()
@@ -253,7 +253,7 @@ def cnf(nym):
 
 
 # TODO: add error handling for bad name, date, bibkey
-@app.route('/vnf/<name>/<date>/<bibkey>', methods=['GET'])
+@app.route('/cite/<name>/<date>/<bibkey>', methods=['GET'])
 @login_required
 def vnf(name, date, bibkey):
   c = get_db().cursor()
