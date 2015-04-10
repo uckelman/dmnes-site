@@ -4,8 +4,8 @@
 
 {% macro index_nav(index) %}
 <nav class="index_nav">
-{% for i in index %}
-  <a href="#{{ i[0] }}">{{ i[0] }}</a>{% if not loop.last %} ·{% endif %}
+{% for i in index -%}
+  <a href="#{{ i[0] }}">{{ i[0] }}</a>{% if not loop.last %} · {% endif -%}
 {% endfor %}
 </nav>
 {% endmacro %}
@@ -13,9 +13,9 @@
 {{ index_nav(index) }}
 <div class="aldus">☙</div>
 
-{% for i in index %}
+{% for i in index -%}
 <p class="index_letter"><a class="letter_anchor" name="{{ i[0] }}"/>{{ i[0] }}
-  {% for nym in i[1] %}
+  {% for nym in i[1] -%}
 <a href="{{ url_for('cnf', nym=nym) }}">{{ nym }}</a>
   {% endfor %}
 </p>

@@ -3,8 +3,6 @@ use real endashes, emdashes
 
 finish date sorting
 
-max-width doesn't scale properly with font size (why not?)
-
 ensure that non-WOFF fonts are gzipped on output by Apache
 ensure that we provide all fonts used
 
