@@ -269,6 +269,18 @@ def vnf(name, date, bibkey):
   return render_template('vnf.html', vnf=vnf, cnfs=cnfs)
 
 
+@app.route('/bibs', methods=['GET'])
+@login_required
+def bib_index():
+  c = get_db().cursor()
+
+  # get bibs
+  c.execute('SELECT * FROM bib')
+  bibs = c.fetchall()
+
+  return render_template('bib_index.html', bibs=bibs)
+
+
 # TODO: add error handling for bad bibkey
 @app.route('/bib/<key>', methods=['GET'])
 @login_required
