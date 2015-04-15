@@ -3,8 +3,8 @@
 {% block content %}
 <p>
   <span class="name">{{ vnf['name'] }}</span>
-  <span class="gen">{{ vnf['gen'] }}</span>
-  <span class="case">{{ vnf['case'] }}</span>
+  <span class="gen">{{ vnf['gen'].lower() }}.</span>
+  <span class="case">({{ vnf['case'] }})</span>
   <span class="dim">{{ vnf['dim'] }}</span>
   <span class="lang">{{ vnf['lang'] }}</span>
   {% if vnf['place'] %}
