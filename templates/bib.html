@@ -5,4 +5,9 @@
   <dt>{{ bib['key'] }}</dt>
   <dd>{{ bib['data']|safe }}</dd>
 </dl>
+
+{% for vnf in vnfs %}
+  <a href="{{ url_for('vnf', name=vnf['name'], date=vnf['date'], bibkey=bib['key']) }}">{{ vnf['name'] }}</a>
+{% endfor %}
+
 {% endblock %}

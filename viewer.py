@@ -279,7 +279,11 @@ def bib(key):
   c.execute('SELECT * FROM bib WHERE key = ? LIMIT 1', (key,))
   b = c.fetchone()
 
-  return render_template('bib.html', bib=b)
+  # get VNFs for bib
+  c.execute('SELECT name, date FROM vnf WHERE bib_id = ? ORDER BY name', (b['id'],))
+  vnfs = c.fetchall()
+
+  return render_template('bib.html', bib=b, vnfs=vnfs)
 
 
 @app.errorhandler(Exception)
