@@ -76,7 +76,7 @@ def strip_marks(s):
 def cnf_index():
   c = get_db().cursor()
 
-  # get CNF
+  # get CNFs
   c.execute('SELECT nym FROM cnf')
   nyms = c.fetchall()
 
