@@ -4,7 +4,7 @@
 
 <dl>
 {% for bib in bibs %}
-  <dt>{{ bib['key'] }}</dt>
+  <dt><a href="{{ url_for('bib', key=bib['key']) }}">{{ bib['key'] }}</a></dt>
   <dd>{{ bib['data']|safe }}</dd>
 {% endfor %}
 </dl>

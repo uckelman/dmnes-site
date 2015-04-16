@@ -275,7 +275,7 @@ def bib_index():
   c = get_db().cursor()
 
   # get bibs
-  c.execute('SELECT * FROM bib')
+  c.execute('SELECT * FROM bib ORDER BY key')
   bibs = c.fetchall()
 
   return render_template('bib_index.html', bibs=bibs)
