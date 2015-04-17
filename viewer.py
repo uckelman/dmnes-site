@@ -275,8 +275,12 @@ def bib_index():
   c = get_db().cursor()
 
   # get bibs
-  c.execute('SELECT * FROM bib ORDER BY key')
+  c.execute('SELECT * FROM bib')
   bibs = c.fetchall()
+
+  # sort by keys, stripped of diacritical marks
+  bibs = list(bibs)
+  bibs.sort(key=lambda x: strip_marks(x['key']))
 
   return render_template('bib_index.html', bibs=bibs)
 
@@ -292,8 +296,12 @@ def bib(key):
   b = c.fetchone()
 
   # get VNFs for bib
-  c.execute('SELECT name, date FROM vnf WHERE bib_id = ? ORDER BY name', (b['id'],))
+  c.execute('SELECT name, date FROM vnf WHERE bib_id = ?', (b['id'],))
   vnfs = c.fetchall()
+
+  # sort VNFs by name, stripped of diacritical marks
+  vnfs = list(vnfs)
+  vnfs.sort(key=lambda x: strip_marks(x['name']))
 
   return render_template('bib.html', bib=b, vnfs=vnfs)
 
