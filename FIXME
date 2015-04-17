@@ -1,3 +1,5 @@
+site navigation
+
 use real quotes, endashes, emdashes
 
 finish date sorting
@@ -7,7 +9,7 @@ ensure that we provide all fonts used
 
 finish data display for VNFs
 
-get SELinux file contexts right (also for editor)
-
 caching
 check that SQL is efficient, we have the right indices
+
+get SELinux file contexts right (also for editor)
