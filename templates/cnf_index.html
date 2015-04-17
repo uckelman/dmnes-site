@@ -4,9 +4,11 @@
 
 {% macro index_nav(index) %}
 <nav class="index_nav">
+  <ul>
 {% for i in index -%}
-  <a href="#{{ i[0] }}">{{ i[0] }}</a>{% if not loop.last %} · {% endif -%}
+    <li><a href="#{{ i[0] }}">{{ i[0] }}</a></li>
 {% endfor %}
+  </ul>
 </nav>
 {% endmacro %}
 

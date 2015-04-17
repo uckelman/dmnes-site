@@ -80,6 +80,22 @@ dd {
   letter-spacing: -0.25pt;
 }
 
+.index_nav ul {
+  padding: 0;
+}
+
+.index_nav ul li {
+  display: inline;
+}
+
+.index_nav ul li:before {
+  content: ' · ';
+}
+
+.index_nav ul li:first-child:before {
+  content: '';
+}
+
 p.index_letter {
   clear: both;
   margin: 1.5em auto;
