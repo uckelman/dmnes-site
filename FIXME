@@ -1,19 +1,15 @@
-use real quotes
-use real endashes, emdashes
+use real quotes, endashes, emdashes
 
 finish date sorting
 
 ensure that non-WOFF fonts are gzipped on output by Apache
 ensure that we provide all fonts used
 
-  sfnt2woff font.ttf
-  mkeot font.ttf >font.eot
-  woff2sfnt font.woff >font.ttf
-
 finish data display for VNFs
-finish data display for bibs
-caching
 
 get SELinux file contexts right (also for editor)
 
+caching
 check that SQL is efficient, we have the right indices
+
+Link nyms in freeform text
