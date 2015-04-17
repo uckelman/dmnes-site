@@ -9,14 +9,14 @@
   {% endif %}
 </p>
   {% if cnf['usg'] %}
-<p>
-  <span class="usg">{{ cnf['usg']|safe }}</span>
-</p>
+<div class="usg">
+  {{ cnf['usg']|safe }}
+</div>
   {% endif %}
   {%if cnf['def'] %}
-<p>
-  <span class="def">{{ cnf['def']|safe }}</span>
-</p>
+<div class="def">
+  {{ cnf['def']|safe }}
+</div>
   {% endif %}
 
 {% if vnfhtml %}
