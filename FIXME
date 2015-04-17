@@ -11,5 +11,3 @@ get SELinux file contexts right (also for editor)
 
 caching
 check that SQL is efficient, we have the right indices
-
-Link nyms in freeform text
