@@ -1,5 +1,5 @@
 body {
-  margin: 6ex auto;
+  margin: 0 auto 4ex auto;
   max-width: 31em;
 
   text-align: justify;
@@ -34,6 +34,150 @@ body {
   -webkit-font-feature-settings: "calt";
 }
 
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  color: #23527C;
+  text-decoration: underline;
+}
+
+#site_title {
+  color: #df2020;
+  font-weight: normal;
+/*  font-size: 2.5em; */
+  line-height: 1.1;
+  text-align: center;
+
+  font-size: 2em;
+  font-feature-settings: "smcp";
+  -moz-font-feature-settings: "smcp";
+  -ms-font-feature-settings: "smcp";
+  -o-font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
+
+  margin-top: 3ex;
+}
+
+#site_title a {
+  color: #df2020;
+  text-decoration: none;
+}
+
+#head_nav {
+  text-align: center;
+}
+
+#head_nav ul.mhlist li:before {
+  margin: 0 0.5em;
+}
+
+#copyright {
+  font-size: 0.8em;
+  float: left;
+}
+
+#foot_nav {
+  text-align: center;
+}
+
+#foot_nav ul.mhlist {
+  display: inline;
+}
+
+#foot_nav ul.mhlist li:before {
+  margin: 0 0.5em;
+}
+
+.aldus {
+  text-align: center;
+  margin: 1em auto;
+}
+
+#flashes {
+  color: white;
+  background-color: black;
+  padding: 5pt 10pt;
+  border-radius: 0 0 5pt 5pt;
+}
+
+.closebutton {
+  float: right;
+
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0.24px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:20px;
+	line-height:20px;
+	width:20px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #ffffff;
+}
+
+.closebutton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+
+.closebutton:active {
+	position: relative;
+	top: 1px;
+}
+
+
+/*
+ *  Mid-dot separated horizontal unnumbered list
+ */
+
+ul.mhlist {
+  padding: 0;
+}
+
+ul.mhlist li {
+  display: inline;
+}
+
+ul.mhlist li:before {
+  content: ' · ';
+}
+
+ul.mhlist li:first-child:before {
+  content: '';
+}
+
+/*
+ * CNF, VNF, bib display
+ */
+
 .nym {
   font-weight: bold;
 }
@@ -48,16 +192,6 @@ body {
 
 .dim {
   font-size: 0.875em;
-}
-
-a {
-  color: black;
-  text-decoration: none;
-}
-
-a:hover, a:focus {
-  color: #23527C;
-  text-decoration: underline;
 }
 
 .bib_key {
@@ -75,37 +209,37 @@ dd {
 /*  margin-left: 1.5em; */
 }
 
+#citeme {
+  font-size: 0.8em;
+  border-top: 1pt solid;
+  padding-top: 0.5em;
+}
+
+#citeme > cite {
+  font-style: normal;
+}
+
+/*
+ *  CNF index
+ */
+
 .index_nav {
   text-align: center;
   letter-spacing: -0.25pt;
-}
-
-.index_nav ul {
-  padding: 0;
-}
-
-.index_nav ul li {
-  display: inline;
-}
-
-.index_nav ul li:before {
-  content: ' · ';
-}
-
-.index_nav ul li:first-child:before {
-  content: '';
 }
 
 p.index_letter {
   clear: both;
   margin: 1.5em auto;
   overflow: auto;
+
+/*  -moz-column-count: 5; */
 }
 
 p.index_letter:first-letter {
   float: left;
   font-size: 3.4em;
-  color: red;
+  color: #df2020;
   margin: 0.055em 7.5pt 0 0;
 }
 
@@ -114,19 +248,4 @@ a.letter_anchor {
   top: -1em;
 }
 
-// p.index::first-letter { initial-letter: 2 2; }
-
-.aldus {
-  text-align: center;
-  margin: 1em auto;
-}
-
-.citeme {
-  font-size: 0.8em;
-  border-top: 1pt solid;
-  padding-top: 0.5em;
-}
-
-.citeme > cite {
-  font-style: normal;
-}
+/* p.index::first-letter { initial-letter: 2 2; } */

@@ -4,7 +4,7 @@
 
 {% macro index_nav(index) %}
 <nav class="index_nav">
-  <ul>
+  <ul class="mhlist">
 {% for i in index -%}
     <li><a href="#{{ i[0] }}">{{ i[0] }}</a></li>
 {% endfor %}
