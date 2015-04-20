@@ -61,7 +61,7 @@ def logout():
 @app.route('/')
 @login_required
 def slash():
-  return 'Welcome to the DMNES!'
+  return render_template('front.html')
 
 
 def strip_marks(s):
