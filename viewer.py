@@ -64,6 +64,36 @@ def slash():
   return render_template('front.html')
 
 
+@app.route('/about')
+@login_required
+def about():
+  return render_template('about.html')
+
+
+@app.route('/guide')
+@login_required
+def guide():
+  return render_template('guide.html')
+
+
+@app.route('/media')
+@login_required
+def media():
+  return render_template('media.html')
+
+
+#@app.route('/donate')
+#@login_required
+#def media():
+#  return render_template('media.html')
+
+
+@app.route('/colophon')
+@login_required
+def colophon():
+  return render_template('colophon.html')
+
+
 def strip_marks(s):
   return ''.join(
     c for c in unicodedata.normalize('NFKD', s)

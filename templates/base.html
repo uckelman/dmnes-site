@@ -10,53 +10,39 @@
 {% endblock %}
 </head>
 <body>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div id="flashes">
-        <div class="closebutton">×</div>
-      {% for category, message in messages %}
-        {% if category == 'error' %}
-          <div class="error"><strong>Error:</strong> {{ message }}</div>
-        {% else %}
-          <div class="{{ category }}">{{ message }}</div>
-        {% endif %}
-      {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-
+  {% block flash %}{% endblock %}
   {% block header %}
   <header>
     <div id="site_title"><a href="/">Dictionary of Medieval Names from European Sources</a></div>
 
     <nav id="head_nav">
       <ul class="mhlist">
-        <li><a href="/about.html">About</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
         <li><a href="{{ url_for('cnf_index') }}">Browse</a></li>
-        <li><a href="/guide.html">Guide</a></li>
+        <li><a href="{{ url_for('guide') }}">Guide</a></li>
         <li><a href="http://dmnes.wordpress.com">Blog</a></li>
-        <li><a href="/media.html">Media</a></li>
+        <li><a href="{{ url_for('media') }}">Media</a></li>
       </ul>
     </nav>
 
     <div class="aldus">☙</div>
   </header>
   {% endblock %}
-
   {% block content %}{% endblock %}
-
   {% block footer %}
   <footer>
     <div class="aldus">❧</div>
     <nav id="foot_nav">
       <ul class="mhlist">
-        <li><a href="">Archive</a></li>
-        <li><a href="">Contact</a></li>
+        <li><a href="/archives.html">Archives</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+<!--
         <li><a href="">Donate</a></li>
-        <li><a href="">Colophon</a></li>
+-->
+        <li><a href="{{ url_for('colophon') }}">Colophon</a></li>
       </ul>
     </nav>
-    <div id="copyright">© 2015 <a href="/about.html#masthead">The Editors</a>.</div>
+    <div id="copyright">© 2015 <a href="{{ url_for('about', _anchor='masthead') }}">The Editors</a>.</div>
   </footer>
   {% endblock %}
 </body>
