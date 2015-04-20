@@ -60,7 +60,7 @@ def logout():
 
 @app.route('/')
 @login_required
-def slash():
+def front():
   return render_template('front.html')
 
 
@@ -80,6 +80,18 @@ def guide():
 @login_required
 def media():
   return render_template('media.html')
+
+
+@app.route('/archives')
+@login_required
+def archives():
+  return render_template('archives.html')
+
+
+@app.route('/contact')
+@login_required
+def contact():
+  return render_template('contact.html')
 
 
 #@app.route('/donate')
