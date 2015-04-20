@@ -13,7 +13,7 @@ from auth import User, handle_login, handle_logout, login_required
 def default_config():
   return dict(
     SECRET_KEY=os.urandom(128),
-    DEBUG=False
+    DEBUG=True
   )
 
 

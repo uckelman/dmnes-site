@@ -9,6 +9,9 @@
   </form>
 
   {% for r in results %}
-  <pre>{{ r }}</pre>
+  <div>
+    <a href="{{ url_for('cnf', nym=r['nym']) }}">{{ r['nym'] }}</a>
+    {{ r['snippet'] }}
+  </div>
   {% endfor %}
 {% endblock %}
