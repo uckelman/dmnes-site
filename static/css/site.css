@@ -197,6 +197,19 @@ ul.mhlist li:first-child:before {
 }
 
 /*
+ * Front
+ */
+
+.front h1 {
+  text-transform: lowercase;
+  text-align: center;
+}
+
+.front p {
+  font-size: 1.5em;
+}
+
+/*
  * CNF, VNF, bib display
  */
 

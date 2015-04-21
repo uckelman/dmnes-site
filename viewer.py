@@ -61,7 +61,11 @@ def logout():
 @app.route('/')
 @login_required
 def front():
-  return render_template('front.html')
+  return render_template(
+    'front.html',
+    year=app.config['EDITION_YEAR'],
+    number=app.config['EDITION_NUMBER']
+  )
 
 
 @app.route('/about')

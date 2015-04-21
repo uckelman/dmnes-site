@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Dictionary of Medieval Names from European Sources{% endblock %}
 {% block content %}
-<p>I am the front page. I am sad without some text.</p>
+<div class="front">
+<h1 class="sc">Edition {{ year }}, No. {{ number }}</h1>
+
+<p>The <i>Dictionary of Medieval Names from European Sources</i> aims to document all given (fore, Christian) names recorded in European sources written between 600 and 1600.</p>
+
+<p>Looking for a particular name? <a href="{{ url_for('cnf_index') }}">Browse</a> the entries in the <i>Dictionary</i>.</p>
+
+<p>Wondering how to interpret an entry? <a href="{{ url_for('guide') }}">See the Guide</a>.</p>
+</div>
 {% endblock %}
