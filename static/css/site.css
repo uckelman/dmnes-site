@@ -310,10 +310,16 @@ a.letter_anchor {
   text-align: center;
 }
 
+.follow a {
+  display: inline-block;
+  text-decoration: none;
+  margin: 0 0.25em;
+}
+
 .follow img {
+  vertical-align: bottom;
   width: 3em;
   height: 3em;
-  margin: 0 0.25em;
 }
 
 /*
