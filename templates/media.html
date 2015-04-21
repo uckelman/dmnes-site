@@ -3,8 +3,12 @@
 {% block content %}
 <h1>Media</h1>
 
-<h3>Follow the <i>DMNES</i> online:</h3>
-<p><a href="http://dmnes.wordpress.com/"><img src="images/wordpress.png" alt="wordpress icon"/></a> &#x0095; <a href="https://www.facebook.com/thedmnes"><img src="images/facebook.png" alt="facebook icon"/></a> &#x0095; <a href="https://twitter.com/theDMNES"><img src="images/twitter.png" alt="twitter icon"/></a>
+<h3>Follow the <i>Dictionary</i> online:</h3>
+<ul class="hlist follow">
+  <li><a href="http://dmnes.wordpress.com/"><img src="{{ url_for('static', filename='images/wordpress.svg') }}" alt="wordpress icon"/></a><li>
+  <li><a href="https://www.facebook.com/thedmnes"><img src="{{ url_for('static', filename='images/facebook.svg') }}" alt="facebook icon"/></a></li>
+  <li><a href="https://twitter.com/theDMNES"><img src="{{ url_for('static', filename='images/twitter.svg') }}" alt="twitter icon"/></a></li>
+</ul>
 
 <h3>Elsewhere in the media:</h3>
 <ul>
