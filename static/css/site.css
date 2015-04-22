@@ -93,6 +93,7 @@ a:hover, a:focus {
 .aldus {
   text-align: center;
   margin: 1em auto;
+  clear: both;
 }
 
 .sc {
