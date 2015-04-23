@@ -1,16 +1,15 @@
-site navigation
-move blog
-
-use real quotes, endashes, emdashes
-
-finish date sorting
-
 ensure that non-WOFF fonts are gzipped on output by Apache
 ensure that we provide all fonts used
 
-finish data display for VNFs
+make nicer Guide
+spellcheck
 
+
+make external links open a new tab
+get SELinux file contexts right (also for editor)
 caching
 check that SQL is efficient, we have the right indices
-
-get SELinux file contexts right (also for editor)
+move blog
+use real quotes, endashes, emdashes
+finish date sorting
+improve data display for VNFs
