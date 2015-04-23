@@ -1,4 +1,4 @@
-ensure that non-WOFF fonts are gzipped on output by Apache
+check rendering in all browsers
 ensure that we provide all fonts used
 
 make nicer Guide
