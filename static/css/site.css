@@ -315,3 +315,39 @@ a.letter_anchor {
   margin-left: -0.36em;
   margin-right: -0.15em;
 }
+
+/*
+ * Guide
+ */
+
+#explanation {
+  float: left;
+  width: 38%;
+  position: relative;
+}
+
+#explanation > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+#explanation p {
+  text-align: left;
+}
+
+#explanation nav.arrows {
+  font-weight: bold;
+  font-size: 2em;
+  text-align: center;
+}
+
+#example {
+  float: right;
+  border: 1px dotted black;
+  padding: 0 10pt 1em 10pt;
+  font-size: 0.75em;
+  width: 55%;
+  margin-bottom: 1em;
+}
