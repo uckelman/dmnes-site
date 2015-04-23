@@ -141,10 +141,6 @@ def cnf_index():
   return render_template('cnf_index.html', index=index)
 
 
-class NymNotFoundError(RuntimeError):
-  pass
-
-
 def get_authors(table, id):
   c = get_db().cursor()
   c.execute('SELECT authors.skey, authors.prenames_short, authors.surname FROM {0} INNER JOIN authors ON {0}.author = authors.id WHERE {0}.ref=?'.format(table), (id,))
@@ -163,9 +159,8 @@ def cnf(nym):
   c.execute('SELECT * FROM cnf WHERE nym = ? COLLATE NOCASE LIMIT 1', (nym,))
   cnf = c.fetchone()
 
-# TODO: catch NymNotFound and display custom message
   if cnf is None:
-    raise NymNotFoundError("nym '{}' not found".format(nym))
+    return render_template('missing.html', entry=nym)
 
   authors = get_authors('cnf_authors', cnf['id'])
 
@@ -298,7 +293,6 @@ def cnf(nym):
   )
 
 
-# TODO: add error handling for bad name, date, bibkey
 @app.route('/cite/<name>/<date>/<bibkey>', methods=['GET'])
 @login_required
 def vnf(name, date, bibkey):
@@ -307,6 +301,11 @@ def vnf(name, date, bibkey):
   # get VNF
   c.execute('SELECT * FROM vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE name = ? AND date = ? AND key = ? LIMIT 1', (name, date, bibkey))
   vnf = c.fetchone()
+
+  if vnf is None:
+    return render_template(
+      'missing.html', entry='{}/{}/{}'.format(name, date, bibkey)
+    )
 
   # get CNFs
   c.execute('SELECT nym FROM cnf INNER JOIN vnf_cnf ON cnf.id = vnf_cnf.cnf WHERE vnf_cnf.vnf = ?', (vnf['id'],))
@@ -331,7 +330,6 @@ def bib_index():
   return render_template('bib_index.html', bibs=bibs)
 
 
-# TODO: add error handling for bad bibkey
 @app.route('/bib/<key>', methods=['GET'])
 @login_required
 def bib(key):
@@ -340,6 +338,9 @@ def bib(key):
   # get bib entry
   c.execute('SELECT * FROM bib WHERE key = ? LIMIT 1', (key,))
   b = c.fetchone()
+
+  if b is None:
+    return render_template('missing.html', entry=key)
 
   # get VNFs for bib
   c.execute('SELECT name, date FROM vnf WHERE bib_id = ?', (b['id'],))
