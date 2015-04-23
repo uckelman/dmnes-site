@@ -5,12 +5,12 @@
   <span class="name">{{ vnf['name'] }}</span>
   <span class="gen">{{ vnf['gen'].lower() }}.</span>
   <span class="case">({{ vnf['case'] }})</span>
-  <span class="dim">{{ vnf['dim'] }}</span>
-  <span class="lang">{{ vnf['lang'] }}</span>
+  <span class="dim">{{ '◑' if vnf['dim'] else '●' }}</span>
+  <span class="lang">{{ vnf['lang'] }}.</span>
   {% if vnf['place'] %}
-  <span class="place">{{ vnf['place']|safe }}</span>
+  <span class="place">{{ vnf['place']|safe }}.</span>
   {% endif %}
-  <span class="date">{{ vnf['date'] }}</span>
+  <span class="date">{{ vnf['date'] }}.</span>
   <a href="{{ url_for('bib', key=vnf['key']) }}"><span class="bibkey">{{ vnf['key'] }}</span></a>
   {% if vnf['bib_loc'] %}
   <span class="bibloc">{{ vnf['bib_loc'] }}</span>
