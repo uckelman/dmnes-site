@@ -98,7 +98,7 @@ a:hover, a:focus {
 }
 
 .cp_name {
-  text-transform: lowercase;
+  font-variant: all-small-caps;
 }
 
 #flashes {
@@ -145,7 +145,7 @@ ul.mhlist li:first-child:before {
  */
 
 .front h1 {
-  text-transform: lowercase;
+  font-variant: all-small-caps;
   text-align: center;
 }
 
@@ -250,7 +250,7 @@ a.letter_anchor {
 
 .masthead td.mast_left {
   text-align: right;
-  text-transform: lowercase;
+  font-variant: all-small-caps;
   width: 35%;
 }
 
