@@ -47,6 +47,7 @@ a:hover, a:focus {
   color: #df2020;
   font-size: 2em;
   font-weight: normal;
+  font-variant: small-caps;
   line-height: 1.1;
   text-align: center;
   margin-top: 3ex;
@@ -145,8 +146,8 @@ ul.mhlist li:first-child:before {
  */
 
 .front h1 {
-  font-variant: all-small-caps;
   text-align: center;
+  font-variant: all-small-caps;
 }
 
 .front p {
