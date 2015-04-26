@@ -24,6 +24,7 @@ body {
 
 a {
   color: black;
+  text-decoration: underline; /* everything but Firefox */
   text-decoration: underline dotted #c0c0c0;
 }
 
