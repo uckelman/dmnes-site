@@ -15,6 +15,10 @@ body {
   font-family: 'EBG12-Re', 'FreeSerif', 'Fallback', serif;
 
   font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
+  -moz-font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
+  -ms-font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
+  -o-font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
+  -webkit-font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
   font-feature-settings: "onum", "liga", "dlig", "calt";
   -moz-font-feature-settings:"onum", "liga", "dlig", "calt";
   -ms-font-feature-settings: "onum", "liga", "dlig", "calt";
@@ -24,7 +28,6 @@ body {
 
 a {
   color: black;
-  text-decoration: underline; /* everything but Firefox */
   text-decoration: underline dotted #c0c0c0;
 }
 
@@ -86,11 +89,15 @@ a:hover, a:focus {
 
 .cp_name {
   font-variant: all-small-caps;
-  font-feature-settings: "smcp";
-  -moz-font-feature-settings: "smcp";
-  -ms-font-feature-settings: "smcp";
-  -o-font-feature-settings: "smcp";
-  -webkit-font-feature-settings: "smcp";
+  -moz-font-variant: all-small-caps;
+  -ms-font-variant: all-small-caps;
+  -o-font-variant: all-small-caps;
+  -webkit-font-variant: all-small-caps;
+  font-feature-settings: "c2sc", "smcp";
+  -moz-font-feature-settings: "c2sc", "smcp";
+  -ms-font-feature-settings: "c2sc", "smcp";
+  -o-font-feature-settings: "c2sc", "smcp";
+  -webkit-font-feature-settings: "c2sc", "smcp";
 }
 
 #flashes {
@@ -139,6 +146,10 @@ ul.mhlist li:first-child:before {
 .front h1 {
   text-align: center;
   font-variant: all-small-caps;
+  -moz-font-variant: all-small-caps;
+  -ms-font-variant: all-small-caps;
+  -o-font-variant: all-small-caps;
+  -webkit-font-variant: all-small-caps;
   -moz-font-feature-settings: "c2sc", "smcp";
   -ms-font-feature-settings: "c2sc", "smcp";
   -o-font-feature-settings: "c2sc", "smcp";
@@ -248,6 +259,10 @@ a.letter_anchor {
   width: 35%;
   text-align: right;
   font-variant: all-small-caps;
+  -moz-font-variant: all-small-caps;
+  -ms-font-variant: all-small-caps;
+  -o-font-variant: all-small-caps;
+  -webkit-font-variant: all-small-caps;
   -moz-font-feature-settings: "c2sc", "smcp";
   -ms-font-feature-settings: "c2sc", "smcp";
   -o-font-feature-settings: "c2sc", "smcp";
