@@ -40,11 +40,11 @@ a:hover, a:focus {
   margin-top: 3ex;
 
   font-variant: small-caps;
-  font-feature-settings: "onum", "liga", "dlig", "calt";
-  -moz-font-feature-settings:"onum", "liga", "dlig", "calt";
-  -ms-font-feature-settings: "onum", "liga", "dlig", "calt";
-  -o-font-feature-settings: "onum", "liga", "dlig", "calt";
-  -webkit-font-feature-settings: "onum", "liga", "dlig", "calt";
+  font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
+  -moz-font-feature-settings:"onum", "liga", "dlig", "calt", "smcp";
+  -ms-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
+  -o-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
+  -webkit-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
 }
 
 #site_title a {
@@ -85,11 +85,11 @@ a:hover, a:focus {
 
 .cp_name {
   font-variant: all-small-caps;
-  font-feature-settings: "smcp";
-  -moz-font-feature-settings: "smcp";
-  -ms-font-feature-settings: "smcp";
-  -o-font-feature-settings: "smcp";
-  -webkit-font-feature-settings: "smcp";
+  font-feature-settings: "c2sc", "smcp";
+  -moz-font-feature-settings: "c2sc", "smcp";
+  -ms-font-feature-settings: "c2sc", "smcp";
+  -o-font-feature-settings: "c2sc", "smcp";
+  -webkit-font-feature-settings: "c2sc", "smcp";
 }
 
 #flashes {
