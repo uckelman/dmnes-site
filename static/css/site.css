@@ -45,18 +45,10 @@ a:hover, a:focus {
 
 #site_title {
   color: #df2020;
+  font-size: 2em;
   font-weight: normal;
-/*  font-size: 2.5em; */
   line-height: 1.1;
   text-align: center;
-
-  font-size: 2em;
-  font-feature-settings: "smcp";
-  -moz-font-feature-settings: "smcp";
-  -ms-font-feature-settings: "smcp";
-  -o-font-feature-settings: "smcp";
-  -webkit-font-feature-settings: "smcp";
-
   margin-top: 3ex;
 }
 
