@@ -48,11 +48,11 @@ a:hover, a:focus {
 /*
   font-variant: small-caps;
 */
-  font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
-  -moz-font-feature-settings:"onum", "liga", "dlig", "calt", "smcp";
-  -ms-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
-  -o-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
-  -webkit-font-feature-settings: "onum", "liga", "dlig", "calt", "smcp";
+  font-feature-settings: "smcp";
+  -moz-font-feature-settings: "smcp";
+  -ms-font-feature-settings: "smcp";
+  -o-font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
 }
 
 #site_title a {
