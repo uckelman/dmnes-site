@@ -88,6 +88,7 @@ a:hover, a:focus {
 }
 
 .cp_name {
+  font-variant: small-caps;
   font-variant: all-small-caps;
   -moz-font-variant: all-small-caps;
   -ms-font-variant: all-small-caps;
@@ -145,6 +146,7 @@ ul.mhlist li:first-child:before {
 
 .front h1 {
   text-align: center;
+  font-variant: small-caps;
   font-variant: all-small-caps;
   -moz-font-variant: all-small-caps;
   -ms-font-variant: all-small-caps;
@@ -258,6 +260,7 @@ a.letter_anchor {
 .masthead td.mast_left {
   width: 35%;
   text-align: right;
+  font-variant: small-caps;
   font-variant: all-small-caps;
   -moz-font-variant: all-small-caps;
   -ms-font-variant: all-small-caps;
