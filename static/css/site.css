@@ -89,6 +89,7 @@ a:hover, a:focus {
 }
 
 .sc {
+  font-variant: small-caps;
   font-feature-settings: "smcp";
   -moz-font-feature-settings: "smcp";
   -ms-font-feature-settings: "smcp";
