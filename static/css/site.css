@@ -366,6 +366,10 @@ a.letter_anchor {
   text-align: center;
 }
 
+#explanation nav.arrows a {
+  text-decoration: none;
+}
+
 #example {
   float: right;
   border: 1px dotted black;
