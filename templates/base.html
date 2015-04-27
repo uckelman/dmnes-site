@@ -7,6 +7,13 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}"/>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/garamond.css') }}"/>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/freefont.css') }}"/>
+  <script>
+    /* avoid FOUC, mainly in IE */
+    document.documentElement.style.display = 'none';
+    window.onload = function() {
+      document.documentElement.style.display = 'block';
+    }
+  </script>
   <!--[if lt IE 9]>
     <script src="{{ url_for('static', filename='js/html5shiv.js') }}"></script>
   <![endif]-->
