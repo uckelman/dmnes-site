@@ -228,14 +228,13 @@ dd {
 p.index_letter {
   clear: both;
   margin: 1.5em auto;
-  overflow: auto;
-
-/*  -moz-column-count: 5; */
+  overflow: hidden;
 }
 
 p.index_letter:first-letter {
   float: left;
   font-size: 3.4em;
+  line-height: 0.8;
   color: #df2020;
   margin: 0.055em 7.5pt 0 0;
 }
