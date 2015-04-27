@@ -243,6 +243,7 @@ p.index_letter:first-letter {
 a.letter_anchor {
   position: relative;
   top: -1em;
+  text-decoration: none;
 }
 
 /* p.index::first-letter { initial-letter: 2 2; } */
