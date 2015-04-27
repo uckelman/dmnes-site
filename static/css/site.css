@@ -142,7 +142,15 @@ ul.mhlist li:before {
   content: ' · ';
 }
 
+ul.mhlist li::before {
+  content: ' · ';
+}
+
 ul.mhlist li:first-child:before {
+  content: '';
+}
+
+ul.mhlist li:first-child::before {
   content: '';
 }
 
@@ -232,6 +240,14 @@ p.index_letter {
 }
 
 p.index_letter:first-letter {
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.8;
+  color: #df2020;
+  margin: 0.055em 7.5pt 0 0;
+}
+
+p.index_letter::first-letter {
   float: left;
   font-size: 3.4em;
   line-height: 0.8;
