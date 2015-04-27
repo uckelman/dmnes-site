@@ -1,9 +1,5 @@
-check rendering in all browsers
-ensure that we provide all fonts used
-
 make nicer Guide
 spellcheck
-
 
 make external links open a new tab
 get SELinux file contexts right (also for editor)
