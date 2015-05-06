@@ -123,20 +123,20 @@ def cnf_index():
   c = get_db().cursor()
 
   # get CNFs
-  c.execute('SELECT nym FROM cnf')
-  nyms = c.fetchall()
+  c.execute('SELECT nym, live FROM cnf')
+  rows = c.fetchall()
 
   # index by initial letter
   index = {}
-  for nym in nyms:
-    n = nym['nym']
+  for row in rows:
+    n = row['nym']
     f = unicodedata.normalize('NFKD', n[0])[0]
-    index.setdefault(f, []).append(n)
+    index.setdefault(f, []).append((n, bool(row['live'])))
   index = sorted(index.items())
 
   # sort each letter by nym, stripped of diacritical marks
   for _, nl in index:
-    nl.sort(key=strip_marks)
+    nl.sort(key=lambda x: strip_marks(x[0]))
 
   return render_template('cnf_index.html', index=index)
 
@@ -207,7 +207,7 @@ def cnf(nym):
     'bib_loc' : lambda v: '<span class="bib_loc">' + v + '</span>' if v else ''
   }
 
-  selectcols = ', '.join(list('"{}"'.format(x) for x in order) + ['vnf.id'])
+  selectcols = ', '.join(list('"{}"'.format(x) for x in order) + ['vnf.id', 'vnf.live'])
   sortcols = selectcols.replace('area', 'area_skey', 1).replace('lang', 'lang_skey', 1).replace('date', 'date_skey', 1)
   sql = 'SELECT {} FROM vnf INNER JOIN vnf_cnf ON vnf.id = vnf_cnf.vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE cnf = ? ORDER BY {}'.format(selectcols, sortcols)
 
@@ -255,7 +255,8 @@ def cnf(nym):
 
           # open link for adjacent key and location
           if k == key_loc_index:
-            vnfhtml += '<a href="{}">'.format(
+            vnfhtml += '<a {}href="{}">'.format(
+              'class="todo" ' if not vnf['live'] else '',
               url_for(
                 'vnf', name=vnf['name'], date=vnf['date'], bibkey=vnf['key']
               )

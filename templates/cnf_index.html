@@ -17,8 +17,8 @@
 
 {% for i in index -%}
 <p class="index_letter"><a class="letter_anchor" name="{{ i[0] }}">{{ i[0] }}</a>
-  {% for nym in i[1] -%}
-<a href="{{ url_for('cnf', nym=nym) }}">{{ nym }}</a>
+  {% for nym, live in i[1] -%}
+<a {% if not live %}class="todo" {% endif -%} href="{{ url_for('cnf', nym=nym) }}">{{ nym }}</a>
   {% endfor %}
 </p>
 {% endfor %}

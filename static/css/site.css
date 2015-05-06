@@ -110,6 +110,10 @@ a:hover, a:focus {
   border-radius: 0 0 5pt 5pt;
 }
 
+.todo {
+  background-color: #ffff00;
+}
+
 /*
  * Horizontal unnumbered list
  */
