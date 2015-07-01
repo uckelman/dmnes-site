@@ -127,6 +127,37 @@ ul.hlist li {
 }
 
 /*
+ * Archival note
+ */
+
+body {
+  overflow-x: hidden;
+}
+
+#archival_note {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 500%;
+  margin: 0 0 0 -250%;
+  padding: 0.5em 0;
+  text-align: center;
+  background: #f7c7c7;
+  font-weight: bold;
+}
+
+#archival_note a {
+  text-decoration: underline dotted black;
+}
+
+#archival_note + #site_title:before {
+  content: "";
+  display: block;
+  margin: 0;
+  padding-bottom: 3ex;
+}
+
+/*
  *  Mid-dot separated horizontal unnumbered list
  */
 
