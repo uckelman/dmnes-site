@@ -7,7 +7,7 @@
 </dl>
 
 {% for vnf in vnfs %}
-  <a href="{{ url_for('vnf', name=vnf['name'], date=vnf['date'], bibkey=bib['key']) }}">{{ vnf['name'] }}</a>
+  <a href="{{ url_for('vnf', name=vnf['name'], date=vnf['date'].replace('/', 's'), bibkey=bib['key']) }}">{{ vnf['name'] }}</a>
 {% endfor %}
 
 {% endblock %}

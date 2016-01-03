@@ -258,7 +258,9 @@ def cnf(nym):
             vnfhtml += '<a {}href="{}">'.format(
               'class="todo" ' if not vnf['live'] else '',
               url_for(
-                'vnf', name=vnf['name'], date=vnf['date'], bibkey=vnf['key']
+                'vnf', name=vnf['name'],
+                date=vnf['date'].replace('/', 's'),
+                bibkey=vnf['key']
               )
             )
 
@@ -299,8 +301,10 @@ def cnf(nym):
 def vnf(name, date, bibkey):
   c = get_db().cursor()
 
+  sdate = date.replace('s', '/')
+
   # get VNF
-  c.execute('SELECT * FROM vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE name = ? AND date = ? AND key = ? LIMIT 1', (name, date, bibkey))
+  c.execute('SELECT * FROM vnf INNER JOIN bib ON vnf.bib_id = bib.id WHERE name = ? AND date = ? AND key = ? LIMIT 1', (name, sdate, bibkey))
   vnf = c.fetchone()
 
   if vnf is None:
