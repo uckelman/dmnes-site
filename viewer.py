@@ -71,31 +71,31 @@ def front():
 @app.route('/about')
 @login_required
 def about():
-  return render_template('about.html')
+  return render_template('about.html', year=app.config['EDITION_YEAR'])
 
 
 @app.route('/guide')
 @login_required
 def guide():
-  return render_template('guide.html')
+  return render_template('guide.html', year=app.config['EDITION_YEAR'])
 
 
 @app.route('/media')
 @login_required
 def media():
-  return render_template('media.html')
+  return render_template('media.html', year=app.config['EDITION_YEAR'])
 
 
 @app.route('/archives')
 @login_required
 def archives():
-  return render_template('archives.html')
+  return render_template('archives.html', year=app.config['EDITION_YEAR'])
 
 
 @app.route('/contact')
 @login_required
 def contact():
-  return render_template('contact.html')
+  return render_template('contact.html', year=app.config['EDITION_YEAR'])
 
 
 #@app.route('/donate')
@@ -107,7 +107,7 @@ def contact():
 @app.route('/colophon')
 @login_required
 def colophon():
-  return render_template('colophon.html')
+  return render_template('colophon.html', year=app.config['EDITION_YEAR'])
 
 
 def strip_marks(s):
@@ -138,7 +138,11 @@ def cnf_index():
   for _, nl in index:
     nl.sort(key=lambda x: strip_marks(x[0]))
 
-  return render_template('cnf_index.html', index=index)
+  return render_template(
+    'cnf_index.html',
+    index=index,
+    year=app.config['EDITION_YEAR']
+  )
 
 
 def get_authors(table, id):
@@ -160,7 +164,11 @@ def cnf(nym):
   cnf = c.fetchone()
 
   if cnf is None:
-    return render_template('missing.html', entry=nym)
+    return render_template(
+      'missing.html',
+      entry=nym,
+      year=app.config['EDITION_YEAR']
+    )
 
   authors = get_authors('cnf_authors', cnf['id'])
 
@@ -309,14 +317,21 @@ def vnf(name, date, bibkey):
 
   if vnf is None:
     return render_template(
-      'missing.html', entry='{}/{}/{}'.format(name, date, bibkey)
+      'missing.html',
+      entry='{}/{}/{}'.format(name, date, bibkey),
+      year=app.config['EDITION_YEAR']
     )
 
   # get CNFs
   c.execute('SELECT nym FROM cnf INNER JOIN vnf_cnf ON cnf.id = vnf_cnf.cnf WHERE vnf_cnf.vnf = ?', (vnf['id'],))
   cnfs = c.fetchall()
 
-  return render_template('vnf.html', vnf=vnf, cnfs=cnfs)
+  return render_template(
+    'vnf.html',
+    vnf=vnf,
+    cnfs=cnfs,
+    year=app.config['EDITION_YEAR']
+  )
 
 
 @app.route('/bibs', methods=['GET'])
@@ -332,7 +347,11 @@ def bib_index():
   bibs = list(bibs)
   bibs.sort(key=lambda x: strip_marks(x['key']))
 
-  return render_template('bib_index.html', bibs=bibs)
+  return render_template(
+    'bib_index.html',
+    bibs=bibs,
+    year=app.config['EDITION_YEAR']
+  )
 
 
 @app.route('/bib/<key>', methods=['GET'])
@@ -345,7 +364,11 @@ def bib(key):
   b = c.fetchone()
 
   if b is None:
-    return render_template('missing.html', entry=key)
+    return render_template(
+      'missing.html',
+      entry=key,
+      year=app.config['EDITION_YEAR']
+    )
 
   # get VNFs for bib
   c.execute('SELECT name, date FROM vnf WHERE bib_id = ?', (b['id'],))
@@ -355,13 +378,22 @@ def bib(key):
   vnfs = list(vnfs)
   vnfs.sort(key=lambda x: strip_marks(x['name']))
 
-  return render_template('bib.html', bib=b, vnfs=vnfs)
+  return render_template(
+    'bib.html',
+    bib=b,
+    vnfs=vnfs,
+    year=app.config['EDITION_YEAR']
+  )
 
 
 @app.errorhandler(Exception)
 def handle_exception(ex):
   ex_text = traceback.format_exc()
-  return render_template('exception.html', ex=ex_text), 500
+  return render_template(
+    'exception.html',
+    ex=ex_text,
+    year=app.config['EDITION_YEAR']
+  ), 500
 
 
 if __name__ == '__main__':
