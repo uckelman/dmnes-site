@@ -17,7 +17,25 @@
 }
 
 @font-face {
-  font-family: 'Fallback';
+  font-family: 'FreeSans';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../fonts/FreeSansSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeSansSubset.woff') format('woff'),
+       url('../fonts/FreeSansSubset.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FreeMono';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../fonts/FreeMonoSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeMonoSubset.woff') format('woff'),
+       url('../fonts/FreeMonoSubset.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FreeSerifNoItalicFallback';
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/FreeSerifSubset.eot?#iefix') format('embedded-opentype'),

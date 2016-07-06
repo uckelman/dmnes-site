@@ -12,7 +12,7 @@ body {
   line-height: 1.5;
 
   font-size: 1.333em;
-  font-family: 'EBG12-Re', 'FreeSerif', 'Fallback', serif;
+  font-family: 'EBG12-Re', 'EBG12-ReNoItalicFallback', 'FreeSerif', 'FreeSerifNoItalicFallback', 'FreeSans', 'FreeMono', 'FreeSerifNoItalicFallback', serif;
 
   font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
   -moz-font-variant: oldstyle-nums common-ligatures discretionary-ligatures contextual;
