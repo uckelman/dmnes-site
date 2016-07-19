@@ -3,6 +3,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/FreeSerifSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeSerifSubset.woff2') format('woff2'),
        url('../fonts/FreeSerifSubset.woff') format('woff'),
        url('../fonts/FreeSerifSubset.ttf') format('truetype');
 }
@@ -12,6 +13,7 @@
   font-style: italic;
   font-weight: normal;
   src: url('../fonts/FreeSerifItalicSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeSerifItalicSubset.woff2') format('woff2'),
        url('../fonts/FreeSerifItalicSubset.woff') format('woff'),
        url('../fonts/FreeSerifItalicSubset.ttf') format('truetype');
 }
@@ -21,6 +23,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/FreeSansSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeSansSubset.woff2') format('woff2'),
        url('../fonts/FreeSansSubset.woff') format('woff'),
        url('../fonts/FreeSansSubset.ttf') format('truetype');
 }
@@ -30,6 +33,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/FreeMonoSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeMonoSubset.woff2') format('woff2'),
        url('../fonts/FreeMonoSubset.woff') format('woff'),
        url('../fonts/FreeMonoSubset.ttf') format('truetype');
 }
@@ -39,6 +43,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/FreeSerifSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/FreeSerifSubset.woff2') format('woff2'),
        url('../fonts/FreeSerifSubset.woff') format('woff'),
        url('../fonts/FreeSerifSubset.ttf') format('truetype');
 }

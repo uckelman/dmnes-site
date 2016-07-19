@@ -3,6 +3,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/EBGaramond12-RegularSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/EBGaramond12-RegularSubset.woff2') format('woff2'),
        url('../fonts/EBGaramond12-RegularSubset.woff') format('woff'),
        url('../fonts/EBGaramond12-RegularSubset.ttf') format('truetype');
 }
@@ -12,6 +13,7 @@
   font-style: italic;
   font-weight: normal;
   src: url('../fonts/EBGaramond12-ItalicSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/EBGaramond12-ItalicSubset.woff2') format('woff2'),
        url('../fonts/EBGaramond12-ItalicSubset.woff') format('woff'),
        url('../fonts/EBGaramond12-ItalicSubset.ttf') format('truetype');
 }
@@ -21,6 +23,7 @@
   font-style: normal;
   font-weight: normal;
   src: url('../fonts/EBGaramond12-RegularSubset.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/EBGaramond12-RegularSubset.woff2') format('woff2'),
        url('../fonts/EBGaramond12-RegularSubset.woff') format('woff'),
        url('../fonts/EBGaramond12-RegularSubset.ttf') format('truetype');
 }
