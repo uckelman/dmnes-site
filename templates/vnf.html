@@ -6,9 +6,9 @@
   <span class="gen">{{ vnf['gen'].lower() }}.</span>
   <span class="case">({{ vnf['case'] }})</span>
   <span class="dim">{{ '◑' if vnf['dim'] else '●' }}</span>
-  <span class="lang">{{ vnf['lang'] }}.</span>
+  <span class="lang">{{ vnf['lang'] }}</span>.
   {% if vnf['place'] %}
-  <span class="place">{{ vnf['place']|safe }}.</span>
+  <span class="place">{{ vnf['place']|safe }}</span>.
   {% endif %}
   <span class="date">{{ vnf['date'] }}.</span>
   <a href="{{ url_for('bib', key=vnf['key']) }}"><span class="bibkey">{{ vnf['key'] }}</span></a>
