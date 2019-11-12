@@ -385,6 +385,9 @@ def bib(key):
     year=app.config['EDITION_YEAR']
   )
 
+@app.errorhandler(404)
+def handle_404(ex):
+    return render_template('404.html'), 404
 
 @app.errorhandler(Exception)
 def handle_exception(ex):
