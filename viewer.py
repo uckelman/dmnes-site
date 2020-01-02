@@ -58,7 +58,7 @@ def logout():
   return handle_logout(lambda x: None)
 
 
-@app.route('/')
+@app.route('/', strict_slashes=False)
 @login_required
 def front():
   return render_template(
